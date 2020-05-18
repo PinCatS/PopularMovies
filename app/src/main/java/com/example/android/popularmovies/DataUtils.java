@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataUtils {
-    private static final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+    private static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w185"; // recommended size
 
     private static final String KEY_RESULTS = "results";
