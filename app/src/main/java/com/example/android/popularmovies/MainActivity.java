@@ -1,7 +1,7 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -39,6 +39,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
     @Override
     public void onMovieClickListener(Movie movie) {
-        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_LONG).show();
+        Intent openMovieDetailsIntent = new Intent(this, MovieDetailsActivity.class);
     }
 }
