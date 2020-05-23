@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -10,7 +11,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickListener {
 
     RecyclerView mRecyclerView;
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setHasFixedSize(true);
 
-            MovieAdapter adapter = new MovieAdapter();
+            MovieAdapter adapter = new MovieAdapter(this);
             adapter.setMoviesData(movies);
             mRecyclerView.setAdapter(adapter);
 
@@ -34,5 +35,10 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onMovieClickListener(Movie movie) {
+        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_LONG).show();
     }
 }
