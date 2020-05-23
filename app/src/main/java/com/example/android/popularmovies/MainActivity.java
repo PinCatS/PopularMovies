@@ -40,5 +40,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     @Override
     public void onMovieClickListener(Movie movie) {
         Intent openMovieDetailsIntent = new Intent(this, MovieDetailsActivity.class);
+        openMovieDetailsIntent.putExtra(Movie.EXTRA_MOVIE_PARCELABLE, movie);
+        startActivity(openMovieDetailsIntent);
     }
 }
