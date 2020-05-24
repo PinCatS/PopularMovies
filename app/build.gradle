@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -21,6 +25,14 @@ android {
         }
     }
 
+    /* To use your own themoviedb API key, please do the following:
+    *       1. Create apikey.properties file in the root directory of the project
+    *       2. Add the following line: THEMOVIEDB_API_KEY="<<YOUR_API_KEY>>"
+    *       3. Rebuild the project
+    */
+    defaultConfig {
+        buildConfigField("String", "THEMOVIEDB_API_KEY", apikeyProperties['THEMOVIEDB_API_KEY'])
+    }
 }
 
 repositories {
