@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.popularmovies.utilities.FakeMovieData;
+import com.example.android.popularmovies.utilities.MovieJasonUtils;
+
 import org.json.JSONException;
 
 import java.util.List;
@@ -21,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         setContentView(R.layout.activity_main);
 
         try {
-            List<Movie> movies = DataUtils.createFromJsonString(FakeMovieData.getFakeMovieJsonString());
+            List<Movie> movies = MovieJasonUtils.createFromJsonString(FakeMovieData.getFakeMovieJsonString());
             mRecyclerView = findViewById(R.id.rv_movies_grid);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
             mRecyclerView.setLayoutManager(layoutManager);

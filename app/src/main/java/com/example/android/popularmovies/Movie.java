@@ -3,16 +3,16 @@ package com.example.android.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-class Movie implements Parcelable {
+public class Movie implements Parcelable {
     public static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
     private String title;
     private String posterUrl;
     private String overview;
-    private int userRating;
+    private float userRating;
     private String releaseDate;
 
-    Movie(String title, String posterUrl, String overview, int userRating, String releaseDate) {
+    public Movie(String title, String posterUrl, String overview, int userRating, String releaseDate) {
         this.title = title;
         this.posterUrl = posterUrl;
         this.overview = overview;
@@ -27,7 +27,7 @@ class Movie implements Parcelable {
         this.posterUrl = fieldsArray[1];
         this.overview = fieldsArray[2];
         this.releaseDate = fieldsArray[3];
-        this.userRating = in.readInt();
+        this.userRating = in.readFloat();
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -52,11 +52,11 @@ class Movie implements Parcelable {
         return overview;
     }
 
-    public int getUserRating() {
+    public float getUserRating() {
         return userRating;
     }
 
-    public void setUserRating(int userRating) {
+    public void setUserRating(float userRating) {
         this.userRating = userRating;
     }
 
@@ -78,7 +78,7 @@ class Movie implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{title, posterUrl, overview, releaseDate});
-        dest.writeInt(userRating);
+        dest.writeFloat(userRating);
     }
 
     @Override

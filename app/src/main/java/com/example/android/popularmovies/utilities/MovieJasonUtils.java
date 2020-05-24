@@ -1,4 +1,6 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.utilities;
+
+import com.example.android.popularmovies.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,9 +9,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataUtils {
+public final class MovieJasonUtils {
     private static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
-    private static final String POSTER_SIZE = "w185"; // recommended size
+    private static final String POSTER_SIZE = "w500";
 
     private static final String KEY_RESULTS = "results";
     private static final String KEY_TITLE = "original_title";
