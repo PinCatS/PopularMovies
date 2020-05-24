@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             MovieAdapter adapter = new MovieAdapter(this);
             adapter.setMoviesData(movies);
             mRecyclerView.setAdapter(adapter);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
