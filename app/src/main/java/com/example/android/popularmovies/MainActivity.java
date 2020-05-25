@@ -3,10 +3,15 @@ package com.example.android.popularmovies;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     MovieAdapter mMovieAdapter;
     ProgressBar mLoadingIndicator;
     TextView mErrorMessage;
+    String mLastSelectedEndpoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +46,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        loadMovieData();
+        loadMovieData(mLastSelectedEndpoint);
     }
 
-    private void loadMovieData() {
-        new FetchMovieClass().execute("movie/top_rated");
+    private void loadMovieData(String endpoint) {
+        if (TextUtils.isEmpty(endpoint)) {
+            endpoint = NetworkUtilities.POPULAR_ENDPOINT;
+        }
+        new FetchMovieClass().execute(endpoint);
     }
 
     private void showErrorMessage() {
@@ -55,6 +64,33 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     private void showMovieData() {
         mErrorMessage.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = new MenuInflater(this);
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int menuItemId = item.getItemId();
+        switch (menuItemId) {
+            case R.id.refresh_item:
+                loadMovieData(mLastSelectedEndpoint);
+                return true;
+            case R.id.most_popular_item:
+                loadMovieData(NetworkUtilities.POPULAR_ENDPOINT);
+                mLastSelectedEndpoint = NetworkUtilities.POPULAR_ENDPOINT;
+                return true;
+            case R.id.top_rated_item:
+                loadMovieData(NetworkUtilities.TOP_RATED_ENDPOINT);
+                mLastSelectedEndpoint = NetworkUtilities.TOP_RATED_ENDPOINT;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

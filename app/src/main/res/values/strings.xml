@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PopularMovies</string>
     <string name="error_message">We failed to retrieve movies. Please, try again.</string>
+    <string name="refresh_menu_title">Refresh</string>
+    <string name="popular_menu_title">Popular</string>
+    <string name="top_rated_menu_title">Top rated</string>
 </resources>
