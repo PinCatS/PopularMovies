@@ -1,7 +1,11 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">PopularMovies</string>
     <string name="error_message">We failed to retrieve movies. Please, try again.</string>
     <string name="refresh_menu_title">Refresh</string>
     <string name="popular_menu_title">Popular</string>
     <string name="top_rated_menu_title">Top rated</string>
+
+    <string name="movie_rating_string" translatable="false">
+        <xliff:g example="8.1/10" id="movie_rating">%.1f</xliff:g>/10
+    </string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.android.popularmovies.utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.android.popularmovies.BuildConfig;
 
@@ -36,20 +37,49 @@ public final class NetworkUtilities {
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = connection.getInputStream();
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
+        String jsonString = null;
 
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
+        if (url == null) {
+            return null;
+        }
+
+        HttpURLConnection connection = null;
+        InputStream is = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+            if (connection.getResponseCode() == 200) {
+                is = connection.getInputStream();
+                jsonString = readFromInputStream(is);
             } else {
-                return null;
+                Log.e(TAG, "Bad response from the server: " + connection.getResponseCode());
             }
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to connect: ", e);
         } finally {
             connection.disconnect();
+
+            if (is != null) {
+                is.close();
+            }
+        }
+
+        return jsonString;
+    }
+
+    private static String readFromInputStream(InputStream is) {
+        Scanner scanner = new Scanner(is);
+        scanner.useDelimiter("\\A");
+
+        boolean hasInput = scanner.hasNext();
+        if (hasInput) {
+            return scanner.next();
+        } else {
+            return null;
         }
     }
 }

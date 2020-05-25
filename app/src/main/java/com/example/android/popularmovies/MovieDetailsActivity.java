@@ -2,12 +2,15 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.Locale;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -48,7 +51,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         textView.setText(releaseDate.split("-")[0]);
 
         textView = findViewById(R.id.tv_movie_rating_details);
-        textView.setText(Double.toString(mMovie.getUserRating()));
+        float rating = mMovie.getUserRating();
+        Log.d("MovieDetailsActivity", "Rating" + rating);
+        textView.setTextLocale(Locale.US);
+        textView.setText(getString(R.string.movie_rating_string, rating));
 
         textView = findViewById(R.id.tv_movie_overview_details);
         textView.setText(mMovie.getOverview());
