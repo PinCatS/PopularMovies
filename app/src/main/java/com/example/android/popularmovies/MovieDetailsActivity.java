@@ -3,10 +3,13 @@ package com.example.android.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 
 import com.squareup.picasso.Picasso;
 
@@ -37,6 +40,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         if (mMovie != null)
             populateUI();
+    }
+
+    private Intent createShareMovieIntent() {
+        Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setText(mMovie.toString())
+                .getIntent();
+        return shareIntent;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.movie_details, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+        menuItem.setIntent(createShareMovieIntent());
+        return true;
     }
 
     private void populateUI() {

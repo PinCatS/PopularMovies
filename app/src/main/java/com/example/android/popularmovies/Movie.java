@@ -66,13 +66,10 @@ public class Movie implements Parcelable {
 
     @Override
     public String toString() {
-        return "Movie{" +
-                "title='" + title + '\'' +
-                ", posterImage=" + posterUrl +
-                ", overview='" + overview + '\'' +
-                ", userRating=" + userRating +
-                ", releaseDate='" + releaseDate + '\'' +
-                '}';
+        return title + "\n\n" +
+                "Release date: " + releaseDate + "\n" +
+                "Rating      : " + userRating + "/10\n" +
+                "Overview    : " + overview;
     }
 
     @Override
