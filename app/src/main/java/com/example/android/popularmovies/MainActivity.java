@@ -3,6 +3,9 @@ package com.example.android.popularmovies;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,11 +21,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
     RecyclerView mRecyclerView;
     MovieAdapter mMovieAdapter;
+    ProgressBar mLoadingIndicator;
+    TextView mErrorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mErrorMessage = findViewById(R.id.tv_error_message);
 
         mRecyclerView = findViewById(R.id.rv_movies_grid);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
@@ -39,6 +47,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         new FetchMovieClass().execute("movie/top_rated");
     }
 
+    private void showErrorMessage() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mErrorMessage.setVisibility(View.VISIBLE);
+    }
+
+    private void showMovieData() {
+        mErrorMessage.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onMovieClickListener(Movie movie) {
         Intent openMovieDetailsIntent = new Intent(this, MovieDetailsActivity.class);
@@ -49,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     public class FetchMovieClass extends AsyncTask<String, Void, List<Movie>> {
         @Override
         protected void onPreExecute() {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -74,9 +93,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movies != null) {
                 mMovieAdapter.setMoviesData(movies);
                 mMovieAdapter.notifyDataSetChanged();
+                showMovieData();
+            } else {
+                showErrorMessage();
             }
         }
     }
