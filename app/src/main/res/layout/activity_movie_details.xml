@@ -29,6 +29,8 @@
             android:layout_marginBottom="16dp"
             android:orientation="horizontal">
 
+            <!-- I don't like that the height is hardcoded but I haven't
+                found a simple a suitable solution at the moment -->
             <ImageView
                 android:id="@+id/iv_poster_details"
                 android:layout_width="0dp"

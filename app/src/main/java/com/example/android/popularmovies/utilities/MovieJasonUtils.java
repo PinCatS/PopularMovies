@@ -28,6 +28,10 @@ public final class MovieJasonUtils {
      * @return String of poster url
      */
     private static String buildPosterUrl(String baseUrl, String size, String relativePath) {
+        /* Not sure at the moment if simple String concatenation will be more suitable here.
+         *  Since it will be called for every parsed movie, I decided to use the builder due to
+         *  performance. But might be it is worth to check if the performance is really different
+         *  here. */
         StringBuilder builder = new StringBuilder(baseUrl);
         return builder.append(size).append(relativePath).toString();
     }

@@ -2,7 +2,6 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -13,8 +12,6 @@ import androidx.core.app.ShareCompat;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.Locale;
-
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private Movie mMovie;
@@ -24,19 +21,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        // Enable UP button
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Retrieve the movie info passed from the main activity
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra(Movie.EXTRA_MOVIE_PARCELABLE)) {
                 mMovie = intent.getParcelableExtra(Movie.EXTRA_MOVIE_PARCELABLE);
             }
         }
-
-        TextView textView = findViewById(R.id.tv_movie_title_details);
-        String title = mMovie.getTitle();
-        textView.setText(title);
 
         if (mMovie != null)
             populateUI();
@@ -66,12 +61,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.tv_movie_year_details);
         String releaseDate = mMovie.getReleaseDate();
-        textView.setText(releaseDate.split("-")[0]);
+        textView.setText(releaseDate.split("-")[0]); // show only the year for now
 
         textView = findViewById(R.id.tv_movie_rating_details);
         float rating = mMovie.getUserRating();
-        Log.d("MovieDetailsActivity", "Rating" + rating);
-        textView.setTextLocale(Locale.US);
         textView.setText(getString(R.string.movie_rating_string, rating));
 
         textView = findViewById(R.id.tv_movie_overview_details);

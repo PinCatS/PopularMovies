@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Movie implements Parcelable {
-    public static final String EXTRA_MOVIE_PARCELABLE = "Movie";
+    static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
     private String title;
     private String posterUrl;
@@ -40,23 +40,23 @@ public class Movie implements Parcelable {
         }
     };
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
-    public String getPosterImage() {
+    String getPosterImage() {
         return posterUrl;
     }
 
-    public String getOverview() {
+    String getOverview() {
         return overview;
     }
 
-    public float getUserRating() {
+    float getUserRating() {
         return userRating;
     }
 
-    public String getReleaseDate() {
+    String getReleaseDate() {
         return releaseDate;
     }
 

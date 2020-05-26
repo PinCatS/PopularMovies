@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickListener {
     private static final String MOVIES_DATA_KEY = "movies";
+    private static final String LAST_SELECTED_ENDPOINT_KEY = "last_endpoint";
 
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
@@ -40,25 +41,41 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mErrorMessage = findViewById(R.id.tv_error_message);
 
         mRecyclerView = findViewById(R.id.rv_movies_grid);
+
+        /* Setting recycler view with Grid Layout Manager.
+         *  Number of columns depends on the screen configuration. It is a simple
+         *  but not the best solution since it is better to vary number of columns according to the
+         *  screen size.
+         * */
         final int columns = getResources().getInteger(R.integer.gallery_columns);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, columns);
         mRecyclerView.setLayoutManager(layoutManager);
+
+        /* The grid items content is not going to change in size, so we could set fixed for
+         *  better performance */
         mRecyclerView.setHasFixedSize(true);
 
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
+        /* If we have a saved movies after screen config change or user switched between apps
+         *  we don't need to request data from the internet. So we are restoring saved movies
+         *  and notify an adapter about it. Otherwise we load data from the internet */
         if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_DATA_KEY)) {
             loadMovieData(mLastSelectedEndpoint);
         } else {
             mMovieAdapter.setMoviesData(savedInstanceState.<Movie>getParcelableArrayList(MOVIES_DATA_KEY));
             mMovieAdapter.notifyDataSetChanged();
+            if (savedInstanceState.containsKey(LAST_SELECTED_ENDPOINT_KEY)) {
+                mLastSelectedEndpoint = savedInstanceState.getString(LAST_SELECTED_ENDPOINT_KEY);
+            }
         }
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelableArrayList(MOVIES_DATA_KEY, mMovieAdapter.getMoviesData());
+        outState.putString(LAST_SELECTED_ENDPOINT_KEY, mLastSelectedEndpoint);
         super.onSaveInstanceState(outState);
     }
 
