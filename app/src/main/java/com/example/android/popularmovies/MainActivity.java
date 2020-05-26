@@ -25,11 +25,11 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickListener {
     private static final String MOVIES_DATA_KEY = "movies";
 
-    RecyclerView mRecyclerView;
-    MovieAdapter mMovieAdapter;
-    ProgressBar mLoadingIndicator;
-    TextView mErrorMessage;
-    String mLastSelectedEndpoint;
+    private RecyclerView mRecyclerView;
+    private MovieAdapter mMovieAdapter;
+    private ProgressBar mLoadingIndicator;
+    private TextView mErrorMessage;
+    private String mLastSelectedEndpoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         startActivity(openMovieDetailsIntent);
     }
 
-    public class FetchMovieClass extends AsyncTask<String, Void, ArrayList<Movie>> {
+    class FetchMovieClass extends AsyncTask<String, Void, ArrayList<Movie>> {
         @Override
         protected void onPreExecute() {
             mLoadingIndicator.setVisibility(View.VISIBLE);

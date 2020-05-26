@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    Movie mMovie;
+    private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private Intent createShareMovieIntent() {
-        Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+        return ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setText(mMovie.toString())
                 .getIntent();
-        return shareIntent;
     }
 
     @Override

@@ -56,10 +56,6 @@ public class Movie implements Parcelable {
         return userRating;
     }
 
-    public void setUserRating(float userRating) {
-        this.userRating = userRating;
-    }
-
     public String getReleaseDate() {
         return releaseDate;
     }

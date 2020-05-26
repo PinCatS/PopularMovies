@@ -61,7 +61,9 @@ public final class NetworkUtilities {
         } catch (IOException e) {
             Log.e(TAG, "Failed to connect: ", e);
         } finally {
-            connection.disconnect();
+            if (connection != null) {
+                connection.disconnect();
+            }
 
             if (is != null) {
                 is.close();
