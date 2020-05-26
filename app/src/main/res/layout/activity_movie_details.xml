@@ -14,11 +14,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:paddingLeft="16dp"
+            android:paddingLeft="@dimen/paddingLeft"
             android:paddingTop="24dp"
-            android:paddingRight="16dp"
+            android:paddingRight="@dimen/paddingRight"
             android:paddingBottom="24dp"
-            android:textColor="#222222"
+            android:textColor="@color/colorTextPrimaryDark"
             android:textSize="40sp"
             tools:text="Chappie" />
 
@@ -33,9 +33,10 @@
                 android:id="@+id/iv_poster_details"
                 android:layout_width="0dp"
                 android:layout_height="250dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="@dimen/paddingLeft"
+                android:layout_marginRight="@dimen/paddingRight"
                 android:layout_weight="1"
+                android:contentDescription="@string/movie_poster_content_description"
                 android:scaleType="centerCrop"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
@@ -50,7 +51,7 @@
                     android:id="@+id/tv_movie_year_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#222222"
+                    android:textColor="@color/colorTextPrimaryDark"
                     android:textSize="22sp"
                     tools:text="2015" />
 
@@ -59,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"
-                    android:textColor="#222222"
+                    android:textColor="@color/colorTextPrimaryDark"
                     android:textSize="18sp"
                     tools:text="8.1/10" />
 
@@ -70,10 +71,10 @@
             android:id="@+id/tv_movie_overview_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="@dimen/paddingLeft"
+            android:paddingRight="@dimen/paddingRight"
             android:paddingBottom="16dp"
-            android:textColor="#222222"
+            android:textColor="@color/colorTextPrimaryDark"
             android:textSize="20sp"
             tools:text="Every child comes to this world full of promise, and none more so than Chappie." />
 

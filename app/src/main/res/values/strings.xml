@@ -9,4 +9,5 @@
         <xliff:g example="8.1/10" id="movie_rating">%.1f</xliff:g>/10
     </string>
     <string name="share_menu_item">share</string>
+    <string name="movie_poster_content_description">Movie poster</string>
 </resources>
