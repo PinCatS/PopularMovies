@@ -20,9 +20,10 @@ import com.example.android.popularmovies.utilities.MovieJasonUtils;
 import com.example.android.popularmovies.utilities.NetworkUtilities;
 
 import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickListener {
+    private static final String MOVIES_DATA_KEY = "movies";
 
     RecyclerView mRecyclerView;
     MovieAdapter mMovieAdapter;
@@ -46,7 +47,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        loadMovieData(mLastSelectedEndpoint);
+        if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_DATA_KEY)) {
+            loadMovieData(mLastSelectedEndpoint);
+        } else {
+            mMovieAdapter.setMoviesData(savedInstanceState.<Movie>getParcelableArrayList(MOVIES_DATA_KEY));
+            mMovieAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelableArrayList(MOVIES_DATA_KEY, mMovieAdapter.getMoviesData());
+        super.onSaveInstanceState(outState);
     }
 
     private void loadMovieData(String endpoint) {
@@ -100,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         startActivity(openMovieDetailsIntent);
     }
 
-    public class FetchMovieClass extends AsyncTask<String, Void, List<Movie>> {
+    public class FetchMovieClass extends AsyncTask<String, Void, ArrayList<Movie>> {
         @Override
         protected void onPreExecute() {
             mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -108,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         }
 
         @Override
-        protected List<Movie> doInBackground(String... params) {
+        protected ArrayList<Movie> doInBackground(String... params) {
             if (params != null && params.length == 0) {
                 return null;
             }
@@ -116,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             String requestEndpoint = params[0];
             URL movieUrl = NetworkUtilities.buildURL(requestEndpoint);
 
-            List<Movie> movies = null;
+            ArrayList<Movie> movies = null;
             try {
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
                 movies = MovieJasonUtils.createFromJsonString(jsonResponse);
@@ -128,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         }
 
         @Override
-        protected void onPostExecute(List<Movie> movies) {
+        protected void onPostExecute(ArrayList<Movie> movies) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movies != null) {
                 mMovieAdapter.setMoviesData(movies);

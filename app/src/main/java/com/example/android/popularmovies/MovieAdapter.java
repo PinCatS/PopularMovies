@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private List<Movie> mMoviesData;
+    private ArrayList<Movie> mMoviesData;
     private final OnMovieClickListener mMovieClickListener;
 
     MovieAdapter(OnMovieClickListener listener) {
@@ -47,7 +47,11 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         return mMoviesData == null ? 0 : mMoviesData.size();
     }
 
-    void setMoviesData(List<Movie> movies) {
+    ArrayList<Movie> getMoviesData() {
+        return mMoviesData;
+    }
+
+    void setMoviesData(ArrayList<Movie> movies) {
         mMoviesData = movies;
         notifyDataSetChanged();
     }

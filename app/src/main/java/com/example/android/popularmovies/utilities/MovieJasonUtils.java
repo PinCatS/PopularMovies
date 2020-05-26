@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public final class MovieJasonUtils {
     private static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
@@ -33,8 +32,8 @@ public final class MovieJasonUtils {
         return builder.append(size).append(relativePath).toString();
     }
 
-    public static List<Movie> createFromJsonString(String movieJsonString) throws JSONException {
-        List<Movie> movieList = new ArrayList<>();
+    public static ArrayList<Movie> createFromJsonString(String movieJsonString) throws JSONException {
+        ArrayList<Movie> movieList = new ArrayList<>();
         JSONObject movieJson = new JSONObject(movieJsonString);
 
         JSONArray resultsJsonArray = movieJson.getJSONArray(KEY_RESULTS);
