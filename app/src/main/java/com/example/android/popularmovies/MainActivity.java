@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mErrorMessage = findViewById(R.id.tv_error_message);
 
         mRecyclerView = findViewById(R.id.rv_movies_grid);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
+        final int columns = getResources().getInteger(R.integer.gallery_columns);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, columns);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
