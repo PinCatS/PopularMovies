@@ -48,7 +48,11 @@ public final class MovieJasonUtils {
                     buildPosterUrl(POSTER_BASE_URL, POSTER_SIZE, movieJsonItem.getString(KEY_POSTER_PATH));
             String overview = movieJsonItem.getString(KEY_OVERVIEW);
             int rating = movieJsonItem.getInt(KEY_RATING);
-            String releaseDate = movieJsonItem.getString(KEY_RELEASE_DATE);
+
+            String releaseDate = null;
+            if (movieJsonItem.has(KEY_RELEASE_DATE)) {
+                releaseDate = movieJsonItem.getString(KEY_RELEASE_DATE);
+            }
 
             movieList.add(new Movie(title, posterUrl, overview, rating, releaseDate));
         }

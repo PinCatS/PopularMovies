@@ -33,6 +33,7 @@ public final class NetworkUtilities {
             e.printStackTrace();
         }
 
+        Log.d(TAG, "Url:" + url);
         return url;
     }
 

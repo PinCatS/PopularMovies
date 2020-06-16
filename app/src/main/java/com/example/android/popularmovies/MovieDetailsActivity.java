@@ -2,8 +2,10 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,7 +63,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.tv_movie_year_details);
         String releaseDate = mMovie.getReleaseDate();
-        textView.setText(releaseDate.split("-")[0]); // show only the year for now
+        if (!TextUtils.isEmpty(releaseDate)) {
+            textView.setText(releaseDate.split("-")[0]); // show only the year for now
+        } else {
+            textView.setVisibility(View.GONE);
+        }
 
         textView = findViewById(R.id.tv_movie_rating_details);
         float rating = mMovie.getUserRating();
