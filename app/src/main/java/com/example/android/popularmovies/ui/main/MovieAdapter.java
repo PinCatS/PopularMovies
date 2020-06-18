@@ -13,18 +13,18 @@ import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private ArrayList<MovieEntry> mMoviesData;
+    private List<MovieEntry> mMoviesData;
     private final OnMovieClickListener mMovieClickListener;
 
     MovieAdapter(OnMovieClickListener listener) {
         this.mMovieClickListener = listener;
     }
 
-    ArrayList<MovieEntry> getMoviesData() {
+    List<MovieEntry> getMoviesData() {
         return mMoviesData;
     }
 
@@ -49,7 +49,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         return mMoviesData == null ? 0 : mMoviesData.size();
     }
 
-    void setMoviesData(ArrayList<MovieEntry> movieEntries) {
+    void setMoviesData(List<MovieEntry> movieEntries) {
         mMoviesData = movieEntries;
         notifyDataSetChanged();
     }

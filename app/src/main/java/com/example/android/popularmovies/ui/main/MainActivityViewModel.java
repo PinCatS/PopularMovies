@@ -1,9 +1,13 @@
 package com.example.android.popularmovies.ui.main;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.android.popularmovies.data.database.MovieEntry;
+import com.example.android.popularmovies.data.network.PopularMovieNetworkDataSource;
+import com.example.android.popularmovies.utilities.InjectorUtils;
 
 import java.util.List;
 
@@ -13,8 +17,10 @@ import java.util.List;
 public class MainActivityViewModel extends ViewModel {
     private final LiveData<List<MovieEntry>> mMovies;
 
-    public MainActivityViewModel() {
-        mMovies = null;
+    public MainActivityViewModel(Context context) {
+        PopularMovieNetworkDataSource networkDataSource =
+                InjectorUtils.provideNetworkDataSource(context);
+        mMovies = networkDataSource.getCurrentMovies();
     }
 
     public LiveData<List<MovieEntry>> getMovies() {

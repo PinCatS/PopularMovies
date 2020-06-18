@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.network.NetworkUtilities;
 import com.example.android.popularmovies.ui.details.MovieDetailsActivity;
+import com.example.android.popularmovies.utilities.InjectorUtils;
 import com.example.android.popularmovies.utilities.MovieJasonUtils;
 
 import java.net.URL;
@@ -61,24 +63,26 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        /* If we have a saved movies after screen config change or user switched between apps
-         *  we don't need to request data from the internet. So we are restoring saved movies
-         *  and notify an adapter about it. Otherwise we load data from the internet */
-        if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_DATA_KEY)) {
-            loadMovieData(mLastSelectedEndpoint);
-        } else {
-            ArrayList<MovieEntry> movieEntries = savedInstanceState.getParcelableArrayList(MOVIES_DATA_KEY);
-            mMovieAdapter.setMoviesData(movieEntries);
-            mMovieAdapter.notifyDataSetChanged();
-            if (savedInstanceState.containsKey(LAST_SELECTED_ENDPOINT_KEY)) {
-                mLastSelectedEndpoint = savedInstanceState.getString(LAST_SELECTED_ENDPOINT_KEY);
-            }
+        // retrieve what endpoint a user used last time
+        if (savedInstanceState != null && savedInstanceState.containsKey(LAST_SELECTED_ENDPOINT_KEY)) {
+            mLastSelectedEndpoint = savedInstanceState.getString(LAST_SELECTED_ENDPOINT_KEY);
         }
+
+        // Setup ModelView
+        MainActivityModelFactory modelViewFactory = InjectorUtils.provideMainActivityModelFactory(this);
+        final MainActivityViewModel modelView = new ViewModelProvider(this, modelViewFactory).get(MainActivityViewModel.class);
+        modelView.getMovies().observe(this, newMovieEntries -> {
+            //TODO: Implement DiffUtils way
+            mMovieAdapter.setMoviesData(newMovieEntries);
+            mMovieAdapter.notifyDataSetChanged();
+
+            if (newMovieEntries != null) showMovieData();
+            else showLoading();
+        });
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelableArrayList(MOVIES_DATA_KEY, mMovieAdapter.getMoviesData());
         outState.putString(LAST_SELECTED_ENDPOINT_KEY, mLastSelectedEndpoint);
         super.onSaveInstanceState(outState);
     }
@@ -88,6 +92,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             endpoint = NetworkUtilities.POPULAR_ENDPOINT;
         }
         new FetchMovieClass().execute(endpoint);
+    }
+
+    private void showLoading() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mErrorMessage.setVisibility(View.INVISIBLE);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
