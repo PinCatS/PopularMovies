@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.details;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,12 +12,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 
+import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.data.database.MovieEntry;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailsActivity extends AppCompatActivity {
-    static final String EXTRA_MOVIE_PARCELABLE = "Movie";
+    public static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
-    private Movie mMovie;
+    private MovieEntry mMovieEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +34,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra(EXTRA_MOVIE_PARCELABLE)) {
-                mMovie = intent.getParcelableExtra(EXTRA_MOVIE_PARCELABLE);
+                mMovieEntry = intent.getParcelableExtra(EXTRA_MOVIE_PARCELABLE);
             }
         }
 
-        if (mMovie != null)
+        if (mMovieEntry != null)
             populateUI();
     }
 
     private Intent createShareMovieIntent() {
         return ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
-                .setText(mMovie.toString())
+                .setText(mMovieEntry.toString())
                 .getIntent();
     }
 
@@ -57,13 +59,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void populateUI() {
         ImageView imageView = findViewById(R.id.iv_poster_details);
-        Picasso.get().load(mMovie.getPosterImage()).into(imageView);
+        Picasso.get().load(mMovieEntry.getPosterImage()).into(imageView);
 
         TextView textView = findViewById(R.id.tv_movie_title_details);
-        textView.setText(mMovie.getTitle());
+        textView.setText(mMovieEntry.getTitle());
 
         textView = findViewById(R.id.tv_movie_year_details);
-        String releaseDate = mMovie.getReleaseDate();
+        String releaseDate = mMovieEntry.getReleaseDate();
         if (!TextUtils.isEmpty(releaseDate)) {
             textView.setText(releaseDate.split("-")[0]); // show only the year for now
         } else {
@@ -71,10 +73,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
 
         textView = findViewById(R.id.tv_movie_rating_details);
-        float rating = mMovie.getUserRating();
+        float rating = mMovieEntry.getUserRating();
         textView.setText(getString(R.string.movie_rating_string, rating));
 
         textView = findViewById(R.id.tv_movie_overview_details);
-        textView.setText(mMovie.getOverview());
+        textView.setText(mMovieEntry.getOverview());
     }
 }

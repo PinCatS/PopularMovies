@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.main;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,21 +9,23 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.data.database.MovieEntry;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private ArrayList<Movie> mMoviesData;
+    private ArrayList<MovieEntry> mMoviesData;
     private final OnMovieClickListener mMovieClickListener;
 
     MovieAdapter(OnMovieClickListener listener) {
         this.mMovieClickListener = listener;
     }
 
-    public interface OnMovieClickListener {
-        void onMovieClickListener(Movie movie);
+    ArrayList<MovieEntry> getMoviesData() {
+        return mMoviesData;
     }
 
     @NonNull
@@ -47,13 +49,13 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         return mMoviesData == null ? 0 : mMoviesData.size();
     }
 
-    ArrayList<Movie> getMoviesData() {
-        return mMoviesData;
+    void setMoviesData(ArrayList<MovieEntry> movieEntries) {
+        mMoviesData = movieEntries;
+        notifyDataSetChanged();
     }
 
-    void setMoviesData(ArrayList<Movie> movies) {
-        mMoviesData = movies;
-        notifyDataSetChanged();
+    public interface OnMovieClickListener {
+        void onMovieClickListener(MovieEntry movieEntry);
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -67,8 +69,8 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
         @Override
         public void onClick(View v) {
-            Movie movie = mMoviesData.get(getAdapterPosition());
-            mMovieClickListener.onMovieClickListener(movie);
+            MovieEntry movieEntry = mMoviesData.get(getAdapterPosition());
+            mMovieClickListener.onMovieClickListener(movieEntry);
         }
     }
 }

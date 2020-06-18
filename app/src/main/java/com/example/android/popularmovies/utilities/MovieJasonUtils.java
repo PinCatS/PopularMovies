@@ -1,6 +1,6 @@
 package com.example.android.popularmovies.utilities;
 
-import com.example.android.popularmovies.Movie;
+import com.example.android.popularmovies.data.database.MovieEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,8 +36,8 @@ public final class MovieJasonUtils {
         return builder.append(size).append(relativePath).toString();
     }
 
-    public static ArrayList<Movie> createFromJsonString(String movieJsonString) throws JSONException {
-        ArrayList<Movie> movieList = new ArrayList<>();
+    public static ArrayList<MovieEntry> createFromJsonString(String movieJsonString) throws JSONException {
+        ArrayList<MovieEntry> movieEntryList = new ArrayList<>();
         JSONObject movieJson = new JSONObject(movieJsonString);
 
         JSONArray resultsJsonArray = movieJson.getJSONArray(KEY_RESULTS);
@@ -54,10 +54,10 @@ public final class MovieJasonUtils {
                 releaseDate = movieJsonItem.getString(KEY_RELEASE_DATE);
             }
 
-            movieList.add(new Movie(title, posterUrl, overview, rating, releaseDate));
+            movieEntryList.add(new MovieEntry(title, posterUrl, overview, rating, releaseDate));
         }
 
-        return movieList;
+        return movieEntryList;
     }
 
 

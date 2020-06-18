@@ -1,9 +1,9 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.data.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Movie implements Parcelable {
+public class MovieEntry implements Parcelable {
 
     private String title;
     private String posterUrl;
@@ -11,7 +11,17 @@ public class Movie implements Parcelable {
     private float userRating;
     private String releaseDate;
 
-    public Movie(String title, String posterUrl, String overview, int userRating, String releaseDate) {
+    public static final Parcelable.Creator<MovieEntry> CREATOR = new Parcelable.Creator<MovieEntry>() {
+        public MovieEntry createFromParcel(Parcel in) {
+            return new MovieEntry(in);
+        }
+
+        public MovieEntry[] newArray(int size) {
+            return new MovieEntry[size];
+        }
+    };
+
+    public MovieEntry(String title, String posterUrl, String overview, int userRating, String releaseDate) {
         this.title = title;
         this.posterUrl = posterUrl;
         this.overview = overview;
@@ -19,7 +29,7 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    private Movie(Parcel in) {
+    private MovieEntry(Parcel in) {
         String[] fieldsArray = new String[4];
         in.readStringArray(fieldsArray);
         this.title = fieldsArray[0];
@@ -29,33 +39,23 @@ public class Movie implements Parcelable {
         this.userRating = in.readFloat();
     }
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
-
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    String getPosterImage() {
+    public String getPosterImage() {
         return posterUrl;
     }
 
-    String getOverview() {
+    public String getOverview() {
         return overview;
     }
 
-    float getUserRating() {
+    public float getUserRating() {
         return userRating;
     }
 
-    String getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 

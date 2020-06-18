@@ -1,9 +1,9 @@
 # PopularMovies
-Poject 1 at Udacity Android Basics nanodegree program where I need to create movies app (stage 1).
+Poject 1 at Udacity Android Basics nanodegree program where I need to create movieEntries app (stage 1).
 
-At that stage the app should retrieve movies data from themoviedb.org using their api and show the movies' posters in the grid.
-User could refresh the page and retrieve popular or top rated movies by selecting appropriate option from the menu.
-Clicking on the movie poster, it should open the movie details screen that contains movie details.
+At that stage the app should retrieve movieEntries data from themoviedb.org using their api and show the movieEntries' posters in the grid.
+User could refresh the page and retrieve popular or top rated movieEntries by selecting appropriate option from the menu.
+Clicking on the movieEntry poster, it should open the movieEntry details screen that contains movieEntry details.
 
 In addition sharing functionality was implemented and the app saves state in case of screen configuration changes or when user switches between apps.
 And retrieve the saved state and restore the views without pulling data from the internet.

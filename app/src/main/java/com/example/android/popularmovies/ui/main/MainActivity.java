@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.main;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,7 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.network.NetworkUtilities;
+import com.example.android.popularmovies.ui.details.MovieDetailsActivity;
 import com.example.android.popularmovies.utilities.MovieJasonUtils;
 
 import java.net.URL;
@@ -64,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_DATA_KEY)) {
             loadMovieData(mLastSelectedEndpoint);
         } else {
-            ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList(MOVIES_DATA_KEY);
-            mMovieAdapter.setMoviesData(movies);
+            ArrayList<MovieEntry> movieEntries = savedInstanceState.getParcelableArrayList(MOVIES_DATA_KEY);
+            mMovieAdapter.setMoviesData(movieEntries);
             mMovieAdapter.notifyDataSetChanged();
             if (savedInstanceState.containsKey(LAST_SELECTED_ENDPOINT_KEY)) {
                 mLastSelectedEndpoint = savedInstanceState.getString(LAST_SELECTED_ENDPOINT_KEY);
@@ -125,13 +128,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     }
 
     @Override
-    public void onMovieClickListener(Movie movie) {
+    public void onMovieClickListener(MovieEntry movieEntry) {
         Intent openMovieDetailsIntent = new Intent(this, MovieDetailsActivity.class);
-        openMovieDetailsIntent.putExtra(MovieDetailsActivity.EXTRA_MOVIE_PARCELABLE, movie);
+        openMovieDetailsIntent.putExtra(MovieDetailsActivity.EXTRA_MOVIE_PARCELABLE, movieEntry);
         startActivity(openMovieDetailsIntent);
     }
 
-    class FetchMovieClass extends AsyncTask<String, Void, ArrayList<Movie>> {
+    class FetchMovieClass extends AsyncTask<String, Void, ArrayList<MovieEntry>> {
         @Override
         protected void onPreExecute() {
             mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         }
 
         @Override
-        protected ArrayList<Movie> doInBackground(String... params) {
+        protected ArrayList<MovieEntry> doInBackground(String... params) {
             if (params != null && params.length == 0) {
                 return null;
             }
@@ -147,22 +150,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             String requestEndpoint = params[0];
             URL movieUrl = NetworkUtilities.buildURL(requestEndpoint);
 
-            ArrayList<Movie> movies = null;
+            ArrayList<MovieEntry> movieEntries = null;
             try {
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
-                movies = MovieJasonUtils.createFromJsonString(jsonResponse);
+                movieEntries = MovieJasonUtils.createFromJsonString(jsonResponse);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            return movies;
+            return movieEntries;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Movie> movies) {
+        protected void onPostExecute(ArrayList<MovieEntry> movieEntries) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movies != null) {
-                mMovieAdapter.setMoviesData(movies);
+            if (movieEntries != null) {
+                mMovieAdapter.setMoviesData(movieEntries);
                 mMovieAdapter.notifyDataSetChanged();
                 showMovieData();
             } else {
