@@ -8,6 +8,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.List;
+
 /**
  * Defines a schema of a table in {@link androidx.room.Room} for a single Movie entry
  */
@@ -33,6 +35,8 @@ public class MovieEntry implements Parcelable {
     private float userRating;
     @ColumnInfo(name = "release_date")
     private String releaseDate;
+    @Ignore
+    private List<MovieTrailer> trailers;
 
     public MovieEntry(int id, String title, String posterUrl, String overview, float userRating, String releaseDate) {
         this.id = id;
@@ -44,15 +48,22 @@ public class MovieEntry implements Parcelable {
     }
 
     @Ignore
+    public MovieEntry(int id, String title, String posterUrl, String overview, float userRating, String releaseDate, List<MovieTrailer> trailers) {
+        this(id, title, posterUrl, overview, userRating, releaseDate);
+        this.trailers = trailers;
+    }
+
+    @Ignore
     private MovieEntry(Parcel in) {
         String[] fieldsArray = new String[4];
         in.readStringArray(fieldsArray);
-        this.title = fieldsArray[0];
-        this.posterUrl = fieldsArray[1];
-        this.overview = fieldsArray[2];
-        this.releaseDate = fieldsArray[3];
-        this.userRating = in.readFloat();
-        this.id = in.readInt();
+        title = fieldsArray[0];
+        posterUrl = fieldsArray[1];
+        overview = fieldsArray[2];
+        releaseDate = fieldsArray[3];
+        userRating = in.readFloat();
+        id = in.readInt();
+        trailers = in.createTypedArrayList(MovieTrailer.CREATOR);
     }
 
     public String getTitle() {
@@ -75,6 +86,14 @@ public class MovieEntry implements Parcelable {
         return releaseDate;
     }
 
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public List<MovieTrailer> getTrailers() {
+        return trailers;
+    }
+
     @Override
     public String toString() {
         return title + "\n\n" +
@@ -83,15 +102,12 @@ public class MovieEntry implements Parcelable {
                 "Overview    : " + overview;
     }
 
-    public String getPosterUrl() {
-        return posterUrl;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{title, posterUrl, overview, releaseDate});
         dest.writeFloat(userRating);
         dest.writeInt(id);
+        dest.writeTypedList(trailers);
     }
 
     @Override
