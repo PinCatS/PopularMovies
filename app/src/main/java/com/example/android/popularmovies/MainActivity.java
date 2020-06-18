@@ -16,8 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.popularmovies.data.network.NetworkUtilities;
 import com.example.android.popularmovies.utilities.MovieJasonUtils;
-import com.example.android.popularmovies.utilities.NetworkUtilities;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_DATA_KEY)) {
             loadMovieData(mLastSelectedEndpoint);
         } else {
-            mMovieAdapter.setMoviesData(savedInstanceState.getParcelableArrayList(MOVIES_DATA_KEY));
+            ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList(MOVIES_DATA_KEY);
+            mMovieAdapter.setMoviesData(movies);
             mMovieAdapter.notifyDataSetChanged();
             if (savedInstanceState.containsKey(LAST_SELECTED_ENDPOINT_KEY)) {
                 mLastSelectedEndpoint = savedInstanceState.getString(LAST_SELECTED_ENDPOINT_KEY);

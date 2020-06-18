@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.utilities;
+package com.example.android.popularmovies.data.network;
 
 import android.net.Uri;
 import android.util.Log;
