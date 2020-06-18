@@ -14,7 +14,10 @@ import androidx.core.app.ShareCompat;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
+import com.example.android.popularmovies.data.database.MovieTrailer;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class MovieDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_MOVIE_PARCELABLE = "Movie";
@@ -38,8 +41,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
 
-        if (mMovieEntry != null)
+        if (mMovieEntry != null) {
+            // Retrieve movie trailers and reviews unless we have them already
+            List<MovieTrailer> trailers = mMovieEntry.getTrailers();
+            if (trailers == null || trailers.size() == 0) {
+                //TODO retrieve trailers
+            }
+
             populateUI();
+        }
     }
 
     private Intent createShareMovieIntent() {
