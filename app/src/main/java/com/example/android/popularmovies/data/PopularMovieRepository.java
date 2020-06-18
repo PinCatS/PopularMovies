@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.example.android.popularmovies.AppExecutors;
+import com.example.android.popularmovies.data.database.MovieDao;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.network.PopularMovieNetworkDataSource;
 
@@ -17,22 +18,24 @@ public class PopularMovieRepository {
     private static PopularMovieRepository sInstance;
     private static boolean mInitialized;
 
+    private final MovieDao mMovieDao;
     private final PopularMovieNetworkDataSource mMovieNetworkDataSource;
     private final AppExecutors mExecutors;
 
-    private PopularMovieRepository(PopularMovieNetworkDataSource movieNetworkDataSource,
+    private PopularMovieRepository(MovieDao dao, PopularMovieNetworkDataSource movieNetworkDataSource,
                                    AppExecutors executors) {
 
+        mMovieDao = dao;
         mMovieNetworkDataSource = movieNetworkDataSource;
         mExecutors = executors;
     }
 
-    public synchronized static PopularMovieRepository getInstance(PopularMovieNetworkDataSource movieNetworkDataSource,
+    public synchronized static PopularMovieRepository getInstance(MovieDao dao, PopularMovieNetworkDataSource movieNetworkDataSource,
                                                                   AppExecutors executors) {
         Log.d(TAG, "Getting the repository");
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new PopularMovieRepository(movieNetworkDataSource, executors);
+                sInstance = new PopularMovieRepository(dao, movieNetworkDataSource, executors);
             }
             Log.d(TAG, "Created new repository");
         }

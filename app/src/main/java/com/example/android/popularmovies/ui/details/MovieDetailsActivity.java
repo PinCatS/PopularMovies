@@ -59,7 +59,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void populateUI() {
         ImageView imageView = findViewById(R.id.iv_poster_details);
-        Picasso.get().load(mMovieEntry.getPosterImage()).into(imageView);
+        Picasso.get().load(mMovieEntry.getPosterUrl()).into(imageView);
 
         TextView textView = findViewById(R.id.tv_movie_title_details);
         textView.setText(mMovieEntry.getTitle());

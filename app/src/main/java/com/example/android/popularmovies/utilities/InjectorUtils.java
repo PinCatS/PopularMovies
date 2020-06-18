@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.android.popularmovies.AppExecutors;
 import com.example.android.popularmovies.data.PopularMovieRepository;
+import com.example.android.popularmovies.data.database.PopularMovieDatabase;
 import com.example.android.popularmovies.data.network.PopularMovieNetworkDataSource;
 import com.example.android.popularmovies.ui.main.MainActivityModelFactory;
 
@@ -12,9 +13,10 @@ import com.example.android.popularmovies.ui.main.MainActivityModelFactory;
  * */
 public class InjectorUtils {
     public static PopularMovieRepository provideRepository(Context context) {
+        PopularMovieDatabase repository = PopularMovieDatabase.getInstance(context);
         AppExecutors executors = AppExecutors.getInstance();
         PopularMovieNetworkDataSource networkDataSource = provideNetworkDataSource(context);
-        return PopularMovieRepository.getInstance(networkDataSource, executors);
+        return PopularMovieRepository.getInstance(repository.movieDao(), networkDataSource, executors);
     }
 
     public static PopularMovieNetworkDataSource provideNetworkDataSource(Context context) {

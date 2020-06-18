@@ -3,14 +3,16 @@ package com.example.android.popularmovies.data.database;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MovieEntry implements Parcelable {
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-    private int id;
-    private String title;
-    private String posterUrl;
-    private String overview;
-    private float userRating;
-    private String releaseDate;
+/**
+ * Defines a schema of a table in {@link androidx.room.Room} for a single Movie entry
+ */
+@Entity(tableName = "movie")
+public class MovieEntry implements Parcelable {
 
     public static final Parcelable.Creator<MovieEntry> CREATOR = new Parcelable.Creator<MovieEntry>() {
         public MovieEntry createFromParcel(Parcel in) {
@@ -21,8 +23,18 @@ public class MovieEntry implements Parcelable {
             return new MovieEntry[size];
         }
     };
+    private String title;
+    private String overview;
+    @PrimaryKey
+    private int id;
+    @ColumnInfo(name = "poster_url")
+    private String posterUrl;
+    @ColumnInfo(name = "user_rating")
+    private float userRating;
+    @ColumnInfo(name = "release_date")
+    private String releaseDate;
 
-    public MovieEntry(int id, String title, String posterUrl, String overview, int userRating, String releaseDate) {
+    public MovieEntry(int id, String title, String posterUrl, String overview, float userRating, String releaseDate) {
         this.id = id;
         this.title = title;
         this.posterUrl = posterUrl;
@@ -31,6 +43,7 @@ public class MovieEntry implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
+    @Ignore
     private MovieEntry(Parcel in) {
         String[] fieldsArray = new String[4];
         in.readStringArray(fieldsArray);
@@ -46,8 +59,8 @@ public class MovieEntry implements Parcelable {
         return title;
     }
 
-    public String getPosterImage() {
-        return posterUrl;
+    public int getId() {
+        return id;
     }
 
     public String getOverview() {
@@ -68,6 +81,10 @@ public class MovieEntry implements Parcelable {
                 "Release date: " + releaseDate + "\n" +
                 "Rating      : " + userRating + "/10\n" +
                 "Overview    : " + overview;
+    }
+
+    public String getPosterUrl() {
+        return posterUrl;
     }
 
     @Override
