@@ -1,7 +1,6 @@
 package com.example.android.popularmovies.ui.main;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,10 +21,6 @@ import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.network.NetworkUtilities;
 import com.example.android.popularmovies.ui.details.MovieDetailsActivity;
 import com.example.android.popularmovies.utilities.InjectorUtils;
-import com.example.android.popularmovies.utilities.MovieJasonUtils;
-
-import java.net.URL;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickListener {
     private static final String MOVIES_DATA_KEY = "movies";
@@ -91,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         if (TextUtils.isEmpty(endpoint)) {
             endpoint = NetworkUtilities.POPULAR_ENDPOINT;
         }
-        new FetchMovieClass().execute(endpoint);
+        InjectorUtils.provideNetworkDataSource(this).fetchMovies(endpoint);
     }
 
     private void showLoading() {
@@ -142,45 +137,5 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         Intent openMovieDetailsIntent = new Intent(this, MovieDetailsActivity.class);
         openMovieDetailsIntent.putExtra(MovieDetailsActivity.EXTRA_MOVIE_PARCELABLE, movieEntry);
         startActivity(openMovieDetailsIntent);
-    }
-
-    class FetchMovieClass extends AsyncTask<String, Void, ArrayList<MovieEntry>> {
-        @Override
-        protected void onPreExecute() {
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<MovieEntry> doInBackground(String... params) {
-            if (params != null && params.length == 0) {
-                return null;
-            }
-
-            String requestEndpoint = params[0];
-            URL movieUrl = NetworkUtilities.buildURL(requestEndpoint);
-
-            ArrayList<MovieEntry> movieEntries = null;
-            try {
-                String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
-                movieEntries = MovieJasonUtils.createFromJsonString(jsonResponse);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return movieEntries;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieEntry> movieEntries) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movieEntries != null) {
-                mMovieAdapter.setMoviesData(movieEntries);
-                mMovieAdapter.notifyDataSetChanged();
-                showMovieData();
-            } else {
-                showErrorMessage();
-            }
-        }
     }
 }

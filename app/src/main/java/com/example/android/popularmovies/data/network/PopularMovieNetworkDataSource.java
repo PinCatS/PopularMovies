@@ -26,8 +26,9 @@ public class PopularMovieNetworkDataSource {
         mExecutors = executors;
         mDownloadedMovies = new MutableLiveData<>();
 
+        // TODO: How to pass last used value ?
         // Do initial data fetch
-        fetchMovies();
+        fetchMovies(NetworkUtilities.POPULAR_ENDPOINT);
     }
 
     public static PopularMovieNetworkDataSource getInstance(Context context, AppExecutors executors) {
@@ -48,12 +49,13 @@ public class PopularMovieNetworkDataSource {
     /*
      * Get the newest movie data
      * */
-    void fetchMovies() {
-        Log.d(TAG, "Start downloading new movies data");
+    public void fetchMovies(final String endpoint) {
+
+        Log.d(TAG, "Start downloading new movies data from " + endpoint);
         mExecutors.networkIO().execute(() -> {
             try {
 
-                URL movieUrl = NetworkUtilities.buildURL(NetworkUtilities.POPULAR_ENDPOINT);
+                URL movieUrl = NetworkUtilities.buildURL(endpoint);
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
                 List<MovieEntry> movieEntries = MovieJasonUtils.createFromJsonString(jsonResponse);
