@@ -19,7 +19,7 @@ public interface MovieDao {
     LiveData<List<MovieEntry>> loadAllMovies();
 
     @Query("SELECT * FROM movie WHERE id = :id")
-    LiveData<MovieEntry> loadMovieById(int id);
+    LiveData<MovieEntry> loadMovieById(final int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void bulkInsert(MovieEntry... movieEntries);

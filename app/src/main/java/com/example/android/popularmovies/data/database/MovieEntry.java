@@ -26,7 +26,7 @@ public class MovieEntry implements Parcelable {
     private String title;
     private String overview;
     @PrimaryKey
-    private int id;
+    private final int id;
     @ColumnInfo(name = "poster_url")
     private String posterUrl;
     @ColumnInfo(name = "user_rating")
