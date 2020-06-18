@@ -15,6 +15,7 @@ import androidx.core.app.ShareCompat;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailsActivity extends AppCompatActivity {
+    static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
     private Movie mMovie;
 
@@ -30,8 +31,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         // Retrieve the movie info passed from the main activity
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.hasExtra(Movie.EXTRA_MOVIE_PARCELABLE)) {
-                mMovie = intent.getParcelableExtra(Movie.EXTRA_MOVIE_PARCELABLE);
+            if (intent.hasExtra(EXTRA_MOVIE_PARCELABLE)) {
+                mMovie = intent.getParcelableExtra(EXTRA_MOVIE_PARCELABLE);
             }
         }
 

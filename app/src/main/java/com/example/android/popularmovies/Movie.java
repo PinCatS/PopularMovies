@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Movie implements Parcelable {
-    static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
     private String title;
     private String posterUrl;

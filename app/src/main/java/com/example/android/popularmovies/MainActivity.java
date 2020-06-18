@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_DATA_KEY)) {
             loadMovieData(mLastSelectedEndpoint);
         } else {
-            mMovieAdapter.setMoviesData(savedInstanceState.<Movie>getParcelableArrayList(MOVIES_DATA_KEY));
+            mMovieAdapter.setMoviesData(savedInstanceState.getParcelableArrayList(MOVIES_DATA_KEY));
             mMovieAdapter.notifyDataSetChanged();
             if (savedInstanceState.containsKey(LAST_SELECTED_ENDPOINT_KEY)) {
                 mLastSelectedEndpoint = savedInstanceState.getString(LAST_SELECTED_ENDPOINT_KEY);
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     @Override
     public void onMovieClickListener(Movie movie) {
         Intent openMovieDetailsIntent = new Intent(this, MovieDetailsActivity.class);
-        openMovieDetailsIntent.putExtra(Movie.EXTRA_MOVIE_PARCELABLE, movie);
+        openMovieDetailsIntent.putExtra(MovieDetailsActivity.EXTRA_MOVIE_PARCELABLE, movie);
         startActivity(openMovieDetailsIntent);
     }
 
