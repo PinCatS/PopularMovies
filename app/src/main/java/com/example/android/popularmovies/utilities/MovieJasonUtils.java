@@ -12,6 +12,7 @@ public final class MovieJasonUtils {
     private static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w185"; // recommended
 
+    private static final String KEY_MOVIE_ID = "id";
     private static final String KEY_RESULTS = "results";
     private static final String KEY_TITLE = "original_title";
     private static final String KEY_POSTER_PATH = "poster_path";
@@ -43,6 +44,7 @@ public final class MovieJasonUtils {
         JSONArray resultsJsonArray = movieJson.getJSONArray(KEY_RESULTS);
         for (int i = 0; i < resultsJsonArray.length(); ++i) {
             JSONObject movieJsonItem = resultsJsonArray.getJSONObject(i);
+            int id = movieJsonItem.getInt(KEY_MOVIE_ID);
             String title = movieJsonItem.getString(KEY_TITLE);
             String posterUrl =
                     buildPosterUrl(POSTER_BASE_URL, POSTER_SIZE, movieJsonItem.getString(KEY_POSTER_PATH));
@@ -54,7 +56,7 @@ public final class MovieJasonUtils {
                 releaseDate = movieJsonItem.getString(KEY_RELEASE_DATE);
             }
 
-            movieEntryList.add(new MovieEntry(title, posterUrl, overview, rating, releaseDate));
+            movieEntryList.add(new MovieEntry(id, title, posterUrl, overview, rating, releaseDate));
         }
 
         return movieEntryList;
