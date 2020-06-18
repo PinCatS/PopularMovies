@@ -22,13 +22,11 @@ public class PopularMovieNetworkDataSource {
     private final AppExecutors mExecutors;
     private MutableLiveData<List<MovieEntry>> mDownloadedMovies;
 
+    private static boolean mInitialized;
+
     private PopularMovieNetworkDataSource(Context context, AppExecutors executors) {
         mExecutors = executors;
         mDownloadedMovies = new MutableLiveData<>();
-
-        // TODO: How to pass last used value ?
-        // Do initial data fetch
-        fetchMovies(NetworkUtilities.POPULAR_ENDPOINT);
     }
 
     public static PopularMovieNetworkDataSource getInstance(Context context, AppExecutors executors) {
@@ -42,20 +40,31 @@ public class PopularMovieNetworkDataSource {
         return sInstance;
     }
 
-    public LiveData<List<MovieEntry>> getCurrentMovies() {
+    public LiveData<List<MovieEntry>> getMoviesLiveData(String endpoint) {
+        initializeData(endpoint);
         return mDownloadedMovies;
     }
 
+    public void retrieveMoviesFrom(String endpoint) {
+        fetchMovies(endpoint);
+    }
+
+    private void initializeData(String endpoint) {
+        if (mInitialized) return;
+        mInitialized = true;
+        fetchMovies(endpoint);
+    }
+
     /*
-     * Get the newest movie data
+     * Get the newest movie data from network endpoint and notifies subscribers of movie live data
      * */
-    public void fetchMovies(final String endpoint) {
+    public void fetchMovies(String endpoint) {
+
+        URL movieUrl = NetworkUtilities.buildURL(endpoint);
 
         Log.d(TAG, "Start downloading new movies data from " + endpoint);
         mExecutors.networkIO().execute(() -> {
             try {
-
-                URL movieUrl = NetworkUtilities.buildURL(endpoint);
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
                 List<MovieEntry> movieEntries = MovieJasonUtils.createFromJsonString(jsonResponse);

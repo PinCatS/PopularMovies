@@ -1,21 +1,21 @@
 package com.example.android.popularmovies.ui.main;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class MainActivityModelFactory extends ViewModelProvider.NewInstanceFactory {
-    private final Context mContext;
+import com.example.android.popularmovies.data.PopularMovieRepository;
 
-    public MainActivityModelFactory(Context context) {
-        mContext = context;
+public class MainActivityModelFactory extends ViewModelProvider.NewInstanceFactory {
+    private final PopularMovieRepository mRepository;
+
+    public MainActivityModelFactory(PopularMovieRepository repository) {
+        mRepository = repository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new MainActivityViewModel(mContext);
+        return (T) new MainActivityViewModel(mRepository);
     }
 }

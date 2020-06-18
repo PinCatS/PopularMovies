@@ -2,7 +2,6 @@ package com.example.android.popularmovies.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessage;
     private String mLastSelectedEndpoint;
+
+    private MainActivityViewModel mModelView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
         // Setup ModelView
         MainActivityModelFactory modelViewFactory = InjectorUtils.provideMainActivityModelFactory(this);
-        final MainActivityViewModel modelView = new ViewModelProvider(this, modelViewFactory).get(MainActivityViewModel.class);
-        modelView.getMovies().observe(this, newMovieEntries -> {
+        mModelView = new ViewModelProvider(this, modelViewFactory).get(MainActivityViewModel.class);
+        mModelView.getMoviesLiveData().observe(this, newMovieEntries -> {
             //TODO: Implement DiffUtils way
             mMovieAdapter.setMoviesData(newMovieEntries);
             mMovieAdapter.notifyDataSetChanged();
@@ -80,13 +81,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(LAST_SELECTED_ENDPOINT_KEY, mLastSelectedEndpoint);
         super.onSaveInstanceState(outState);
-    }
-
-    private void loadMovieData(String endpoint) {
-        if (TextUtils.isEmpty(endpoint)) {
-            endpoint = NetworkUtilities.POPULAR_ENDPOINT;
-        }
-        InjectorUtils.provideNetworkDataSource(this).fetchMovies(endpoint);
     }
 
     private void showLoading() {
@@ -117,14 +111,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         int menuItemId = item.getItemId();
         switch (menuItemId) {
             case R.id.refresh_item:
-                loadMovieData(mLastSelectedEndpoint);
+                mModelView.updateMovieData(mLastSelectedEndpoint);
                 return true;
             case R.id.most_popular_item:
-                loadMovieData(NetworkUtilities.POPULAR_ENDPOINT);
-                mLastSelectedEndpoint = NetworkUtilities.POPULAR_ENDPOINT;
+                mModelView.updateMovieData(NetworkUtilities.POPULAR_ENDPOINT);
                 return true;
             case R.id.top_rated_item:
-                loadMovieData(NetworkUtilities.TOP_RATED_ENDPOINT);
+                mModelView.updateMovieData(NetworkUtilities.TOP_RATED_ENDPOINT);
                 mLastSelectedEndpoint = NetworkUtilities.TOP_RATED_ENDPOINT;
                 return true;
             default:
