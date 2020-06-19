@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -13,34 +14,41 @@ import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "trailer", foreignKeys = @ForeignKey(entity = MovieEntry.class,
         parentColumns = "id",
-        childColumns = "movieId",
+        childColumns = "movie_id",
         onDelete = CASCADE))
-public class MovieTrailer implements Parcelable {
+public class MovieTrailerEntry implements Parcelable {
 
     @NonNull
     @PrimaryKey
     final private String key;
     private String name;
-    private int movieId;
-
-    public static final Parcelable.Creator<MovieTrailer> CREATOR = new Parcelable.Creator<MovieTrailer>() {
-        public MovieTrailer createFromParcel(Parcel in) {
-            return new MovieTrailer(in);
+    public static final Parcelable.Creator<MovieTrailerEntry> CREATOR = new Parcelable.Creator<MovieTrailerEntry>() {
+        public MovieTrailerEntry createFromParcel(Parcel in) {
+            return new MovieTrailerEntry(in);
         }
 
-        public MovieTrailer[] newArray(int size) {
-            return new MovieTrailer[size];
+        public MovieTrailerEntry[] newArray(int size) {
+            return new MovieTrailerEntry[size];
         }
     };
+    @ColumnInfo(name = "movie_id")
+    private int movieId;
 
-    public MovieTrailer(@NonNull String key, String name, int movieId) {
+    public MovieTrailerEntry(@NonNull String key, String name, int movieId) {
         this.key = key;
         this.name = name;
         this.movieId = movieId;
     }
 
     @Ignore
-    private MovieTrailer(Parcel in) {
+    public MovieTrailerEntry(int movieId, MovieTrailerHolder holder) {
+        this.key = holder.getKey();
+        this.name = holder.getName();
+        this.movieId = movieId;
+    }
+
+    @Ignore
+    private MovieTrailerEntry(Parcel in) {
         key = in.readString();
         name = in.readString();
         movieId = in.readInt();
@@ -57,6 +65,10 @@ public class MovieTrailer implements Parcelable {
     @NonNull
     public String getKey() {
         return key;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
     }
 
     @Override

@@ -11,12 +11,12 @@ import java.util.List;
 
 @Dao
 public interface MovieTrailerDao {
-    @Query("SELECT * FROM trailer WHERE movieId = :movieId")
-    LiveData<List<MovieTrailer>> findTrailersForMovie(final int movieId);
+    @Query("SELECT * FROM trailer WHERE movie_id = :movieId")
+    LiveData<List<MovieTrailerEntry>> findTrailersForMovie(final int movieId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void bulkInsert(MovieTrailer... trailers);
+    void bulkInsert(MovieTrailerEntry... trailers);
 
     @Delete
-    void deleteTrailers(MovieTrailer... trailers);
+    void deleteTrailers(MovieTrailerEntry... trailers);
 }

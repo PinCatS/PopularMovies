@@ -8,13 +8,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public final class MovieJasonUtils {
-
+public class MovieJsonParser extends JsonParser {
     private static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w185"; // recommended
 
     private static final String KEY_MOVIE_ID = "id";
-    private static final String KEY_RESULTS = "results";
     private static final String KEY_TITLE = "original_title";
     private static final String KEY_POSTER_PATH = "poster_path";
     private static final String KEY_OVERVIEW = "overview";
@@ -38,9 +36,13 @@ public final class MovieJasonUtils {
         return builder.append(size).append(relativePath).toString();
     }
 
-    public static ArrayList<MovieEntry> createFromJsonString(String movieJsonString) throws JSONException {
+    @Override
+    public ArrayList<MovieEntry> parseJson(String jsonString) throws JSONException {
+
+        if (jsonString == null) throw new JSONException("Input JSON string is null");
+
         ArrayList<MovieEntry> movieEntryList = new ArrayList<>();
-        JSONObject movieJson = new JSONObject(movieJsonString);
+        JSONObject movieJson = new JSONObject(jsonString);
 
         JSONArray resultsJsonArray = movieJson.getJSONArray(KEY_RESULTS);
         for (int i = 0; i < resultsJsonArray.length(); ++i) {

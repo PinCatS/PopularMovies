@@ -11,12 +11,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
-import com.example.android.popularmovies.data.database.MovieTrailer;
+import com.example.android.popularmovies.data.database.MovieTrailerEntry;
+import com.example.android.popularmovies.data.database.MovieTrailerHolder;
+import com.example.android.popularmovies.utilities.InjectorUtils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -42,13 +46,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
 
         if (mMovieEntry != null) {
+            // Setup ModelView
+            MovieDetailsModelFactory modelViewFactory = InjectorUtils.provideMovieDetailsModelFactory(this);
+            MovieDetailsViewModel modelView = new ViewModelProvider(this, modelViewFactory).get(MovieDetailsViewModel.class);
+            modelView.getMovieTrailersLiveData().observe(this, newTrailerHolders -> {
+                int movieId = mMovieEntry.getId();
+                List<MovieTrailerEntry> trailers = new ArrayList<>();
+                for (MovieTrailerHolder holder : newTrailerHolders) {
+                    trailers.add(new MovieTrailerEntry(movieId, holder));
+                }
+                mMovieEntry.setTrailers(trailers);
+                populateUI();
+            });
+
             // Retrieve movie trailers and reviews unless we have them already
-            List<MovieTrailer> trailers = mMovieEntry.getTrailers();
+            List<MovieTrailerEntry> trailers = mMovieEntry.getTrailers();
             if (trailers == null || trailers.size() == 0) {
-                //TODO retrieve trailers
+                modelView.updateTrailersData(mMovieEntry.getId());
             }
 
-            populateUI();
         }
     }
 

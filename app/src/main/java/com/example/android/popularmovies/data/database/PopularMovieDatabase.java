@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase;
  * {@link PopularMovieDatabase} database that contain movie table for {@link MovieEntry}
  * with the {@link MovieDao} dao
  */
-@Database(entities = {MovieEntry.class, MovieTrailer.class}, version = 1, exportSchema = false)
+@Database(entities = {MovieEntry.class, MovieTrailerEntry.class}, version = 1, exportSchema = false)
 public abstract class PopularMovieDatabase extends RoomDatabase {
     private static final String TAG = PopularMovieDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();

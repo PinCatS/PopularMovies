@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.android.popularmovies.AppExecutors;
 import com.example.android.popularmovies.data.database.MovieDao;
 import com.example.android.popularmovies.data.database.MovieEntry;
+import com.example.android.popularmovies.data.database.MovieTrailerHolder;
 import com.example.android.popularmovies.data.network.PopularMovieNetworkDataSource;
 
 import java.util.List;
@@ -50,10 +51,18 @@ public class PopularMovieRepository {
         return mMovieNetworkDataSource.getMoviesLiveData(endpoint);
     }
 
+    public LiveData<List<MovieTrailerHolder>> getTrailersLiveData() {
+        return mMovieNetworkDataSource.getTrailersLiveData();
+    }
+
     /*
      * Invokes retrieval of movies from endpoint
      * */
     public void retrieveMoviesFrom(String endpoint) {
         mMovieNetworkDataSource.retrieveMoviesFrom(endpoint);
+    }
+
+    public void retrieveTrailersByMovieId(int id) {
+        mMovieNetworkDataSource.retrieveTrailersByMovieId(id);
     }
 }

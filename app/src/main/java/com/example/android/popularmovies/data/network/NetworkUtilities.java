@@ -19,6 +19,7 @@ public final class NetworkUtilities {
     private static final String API_KEY_QUERY = "api_key";
     public static final String TOP_RATED_ENDPOINT = "movie/top_rated";
     public static final String POPULAR_ENDPOINT = "movie/popular";
+    public static final String MOVIE_TRAILERS_ENDPOINT = "movie/%d/videos";
 
     public static URL buildURL(String endpoint) {
         Uri uri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
