@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
@@ -23,10 +25,18 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDetailsActivity extends AppCompatActivity {
+public class MovieDetailsActivity extends AppCompatActivity implements TrailerAdapter.OnTrailerClickListener {
     public static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
     private MovieEntry mMovieEntry;
+
+    private RecyclerView mTrailersRecyclerView;
+    private TrailerAdapter mTrailerAdapter;
+
+    @Override
+    public void onTrailerClickListener(MovieTrailerEntry movieTrailer) {
+        //TODO: Invoke WebView intent to open the trailer
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
         // Enable UP button
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Setup recycler view for movie trailers
+        mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
+
+        RecyclerView.LayoutManager trailersLayoutManager = new LinearLayoutManager(this);
+        mTrailersRecyclerView.setLayoutManager(trailersLayoutManager);
+        mTrailersRecyclerView.setHasFixedSize(true);
+
+        mTrailerAdapter = new TrailerAdapter(this);
+        mTrailersRecyclerView.setAdapter(mTrailerAdapter);
 
         // Retrieve the movie info passed from the main activity
         Intent intent = getIntent();
@@ -56,7 +76,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     trailers.add(new MovieTrailerEntry(movieId, holder));
                 }
                 mMovieEntry.setTrailers(trailers);
+                mTrailerAdapter.setTrailersData(trailers);
+                mTrailerAdapter.notifyDataSetChanged();
+
                 populateUI();
+
             });
 
             // Retrieve movie trailers and reviews unless we have them already
@@ -66,6 +90,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
 
         }
+
+
     }
 
     private Intent createShareMovieIntent() {

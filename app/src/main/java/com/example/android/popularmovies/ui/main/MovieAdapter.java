@@ -39,7 +39,8 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        if (mMoviesData != null) {
+        // TODO: Do we really need that check ?
+        if (mMoviesData != null && mMoviesData.size() > 0) {
             Picasso.get().load(mMoviesData.get(position).getPosterUrl()).into(holder.posterView);
         }
     }
