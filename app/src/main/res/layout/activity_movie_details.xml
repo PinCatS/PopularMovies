@@ -96,5 +96,22 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="16dp" />
+
+        <!--This View serves as a visual divider between list items-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="#dadada" />
+
+        <include
+            android:id="@+id/details_movie_reviews"
+            layout="@layout/movie_reviews_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp" />
     </LinearLayout>
 </ScrollView>

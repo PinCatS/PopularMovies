@@ -37,6 +37,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
     private RecyclerView mTrailersRecyclerView;
     private TrailerAdapter mTrailerAdapter;
 
+    private RecyclerView mReviewsRecyclerView;
+    private ReviewAdapter mReviewAdapter;
+
     @Override
     public void onTrailerClickListener(MovieTrailerEntry movieTrailer) {
         Log.d(TAG, "TrailerClickListener invoked");
@@ -62,6 +65,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         mTrailerAdapter = new TrailerAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
 
+        // Setup recycler view for movie reviews
+        mReviewsRecyclerView = findViewById(R.id.rv_movie_reviews_list);
+
+        RecyclerView.LayoutManager reviewsLayoutManager = new LinearLayoutManager(this);
+        mReviewsRecyclerView.setLayoutManager(reviewsLayoutManager);
+
+        mReviewAdapter = new ReviewAdapter();
+        mReviewsRecyclerView.setAdapter(mReviewAdapter);
+
         // Retrieve the movie info passed from the main activity
         Intent intent = getIntent();
         if (intent != null) {
@@ -86,17 +98,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             });
 
             modelView.getMovieReviewsLiveData().observe(this, newReviews -> {
-
+                mReviewAdapter.setReviewsData(newReviews);
+                mReviewAdapter.notifyDataSetChanged();
             });
 
             // Retrieve movie trailers and reviews
             modelView.updateTrailersData(mMovieEntry.getId());
+
+            //TODO: Bug - if movie doesn't have reviews, it show the reviews of last clicked film
             modelView.updateReviewsData(mMovieEntry.getId());
 
             populateUI();
         }
-
-
     }
 
     private Intent createShareMovieIntent() {
