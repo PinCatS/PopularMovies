@@ -66,6 +66,12 @@
                     android:textSize="18sp"
                     tools:text="8.1/10" />
 
+                <Button
+                    android:id="@+id/bt_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Mark as\nfavorite" />
+
             </LinearLayout>
         </LinearLayout>
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +35,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
 
     private MovieEntry mMovieEntry;
 
+    private Button mFavoriteButton;
+    private boolean mIsFavorite;
+
     private RecyclerView mTrailersRecyclerView;
     private TrailerAdapter mTrailerAdapter;
 
@@ -54,6 +58,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         // Enable UP button
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mFavoriteButton = findViewById(R.id.bt_favorite);
+        if (mIsFavorite) {
+            mFavoriteButton.setText("Remove\nfrom favorite");
+        } else {
+            mFavoriteButton.setText("Mark\nas favorite");
+        }
 
         // Setup recycler view for movie trailers
         mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
@@ -110,6 +121,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
 
             populateUI();
         }
+
+        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mIsFavorite) {
+                    mFavoriteButton.setText("Mark\nas favorite");
+                    mIsFavorite = false;
+                } else {
+                    mFavoriteButton.setText("Remove\nfrom favorite");
+                    mIsFavorite = true;
+                }
+            }
+        });
     }
 
     private Intent createShareMovieIntent() {
