@@ -1,6 +1,7 @@
 package com.example.android.popularmovies.ui.details;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.example.android.popularmovies.data.database.MovieTrailerEntry;
 import java.util.List;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
+    private static final String TAG = TrailerAdapter.class.getSimpleName();
 
     private final OnTrailerClickListener mTrailerClickListener;
     private List<MovieTrailerEntry> mTrailersData;
@@ -68,6 +70,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
         @Override
         public void onClick(View v) {
+            Log.d(TAG, "MovieTrailer has been clicked");
             MovieTrailerEntry movieTrailer = mTrailersData.get(getAdapterPosition());
             mTrailerClickListener.onTrailerClickListener(movieTrailer);
         }

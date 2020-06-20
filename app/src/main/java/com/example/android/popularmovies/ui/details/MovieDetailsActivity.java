@@ -1,8 +1,10 @@
 package com.example.android.popularmovies.ui.details;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDetailsActivity extends AppCompatActivity implements TrailerAdapter.OnTrailerClickListener {
+    private static final String TAG = MovieDetailsActivity.class.getSimpleName();
+
     public static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
     private MovieEntry mMovieEntry;
@@ -35,7 +39,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
 
     @Override
     public void onTrailerClickListener(MovieTrailerEntry movieTrailer) {
-        //TODO: Invoke WebView intent to open the trailer
+        Log.d(TAG, "TrailerClickListener invoked");
+        openYotubeTrailer(movieTrailer.getKey());
     }
 
     @Override
@@ -78,17 +83,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                 mMovieEntry.setTrailers(trailers);
                 mTrailerAdapter.setTrailersData(trailers);
                 mTrailerAdapter.notifyDataSetChanged();
+            });
 
-                populateUI();
+            modelView.getMovieReviewsLiveData().observe(this, newReviews -> {
 
             });
 
-            // Retrieve movie trailers and reviews unless we have them already
-            List<MovieTrailerEntry> trailers = mMovieEntry.getTrailers();
-            if (trailers == null || trailers.size() == 0) {
-                modelView.updateTrailersData(mMovieEntry.getId());
-            }
+            // Retrieve movie trailers and reviews
+            modelView.updateTrailersData(mMovieEntry.getId());
+            modelView.updateReviewsData(mMovieEntry.getId());
 
+            populateUI();
         }
 
 
@@ -130,5 +135,21 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
 
         textView = findViewById(R.id.tv_movie_overview_details);
         textView.setText(mMovieEntry.getOverview());
+    }
+
+    private void openYotubeTrailer(String trailerKey) {
+
+        Uri trailerUri = Uri.parse(MovieTrailerEntry.TRAILER_YOUTUBE_BASE_URL).buildUpon()
+                .appendEncodedPath("watch")
+                .appendQueryParameter("v", trailerKey)
+                .build();
+
+
+        Log.d(TAG, "Opening youtube trailer: " + trailerUri.toString());
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, trailerUri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

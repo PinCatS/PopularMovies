@@ -8,9 +8,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.android.popularmovies.AppExecutors;
 import com.example.android.popularmovies.data.database.MovieEntry;
+import com.example.android.popularmovies.data.database.MovieReview;
 import com.example.android.popularmovies.data.database.MovieTrailerHolder;
 import com.example.android.popularmovies.utilities.JsonParser;
 import com.example.android.popularmovies.utilities.MovieJsonParser;
+import com.example.android.popularmovies.utilities.ReviewJsonParser;
 import com.example.android.popularmovies.utilities.TrailerJsonParser;
 
 import java.net.URL;
@@ -25,6 +27,7 @@ public class PopularMovieNetworkDataSource {
     private final AppExecutors mExecutors;
     private MutableLiveData<List<MovieEntry>> mDownloadedMovies;
     private MutableLiveData<List<MovieTrailerHolder>> mDownloadedTrailers;
+    private MutableLiveData<List<MovieReview>> mDownloadedReviews;
 
     private static boolean mInitialized;
 
@@ -32,6 +35,7 @@ public class PopularMovieNetworkDataSource {
         mExecutors = executors;
         mDownloadedMovies = new MutableLiveData<>();
         mDownloadedTrailers = new MutableLiveData<>();
+        mDownloadedReviews = new MutableLiveData<>();
     }
 
     public static PopularMovieNetworkDataSource getInstance(Context context, AppExecutors executors) {
@@ -54,10 +58,20 @@ public class PopularMovieNetworkDataSource {
         return mDownloadedTrailers;
     }
 
+    public LiveData<List<MovieReview>> getReviewsLiveData() {
+        return mDownloadedReviews;
+    }
+
     public void retrieveTrailersByMovieId(int id) {
         String endpoint = NetworkUtilities.MOVIE_TRAILERS_ENDPOINT;
         endpoint = String.format(endpoint, id);
         fetchTrailers(endpoint);
+    }
+
+    public void retrieveReviewsByMovieId(int id) {
+        String endpoint = NetworkUtilities.MOVIE_REVIEWS_ENDPOINT;
+        endpoint = String.format(endpoint, id);
+        fetchReviews(endpoint);
     }
 
     public void retrieveMoviesFrom(String endpoint) {
@@ -74,6 +88,7 @@ public class PopularMovieNetworkDataSource {
      * Get the newest movie data from network endpoint and notifies subscribers of movie live data
      * */
     public void fetchMovies(String endpoint) {
+        // TODO: retrieve the default one
         if (endpoint == null) endpoint = NetworkUtilities.POPULAR_ENDPOINT;
         URL movieUrl = NetworkUtilities.buildURL(endpoint);
         JsonParser movieJsonParser = new MovieJsonParser();
@@ -84,7 +99,7 @@ public class PopularMovieNetworkDataSource {
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
                 List<MovieEntry> movieEntries = (List<MovieEntry>) movieJsonParser.parseJson(jsonResponse);
-                Log.d(TAG, "JSON parsing finished");
+                Log.d(TAG, "Movies JSON parsing finished");
 
                 if (movieEntries.size() > 0) {
                     Log.d(TAG, "Movie entries have " + movieEntries.size() + " values");
@@ -114,7 +129,7 @@ public class PopularMovieNetworkDataSource {
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(trailersUrl);
                 List<MovieTrailerHolder> movieTrailerEntries = (List<MovieTrailerHolder>) trailerJsonParser.parseJson(jsonResponse);
-                Log.d(TAG, "JSON parsing finished");
+                Log.d(TAG, "Trailers JSON parsing finished");
 
                 if (movieTrailerEntries.size() > 0) {
                     Log.d(TAG, "Trailers entries have " + movieTrailerEntries.size() + " values");
@@ -122,6 +137,36 @@ public class PopularMovieNetworkDataSource {
 
                     // trigger call to observers
                     mDownloadedTrailers.postValue(movieTrailerEntries);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /*
+     * Get the trailers data for a movie and notifies subscribers of movie trailer live data
+     * */
+    public void fetchReviews(String endpoint) {
+
+        URL reviewsUrl = NetworkUtilities.buildURL(endpoint);
+        Log.d(TAG, "Movie reviews url: " + reviewsUrl);
+        JsonParser reviewJsonParser = new ReviewJsonParser();
+
+        Log.d(TAG, "Start downloading new reviews data from " + endpoint);
+        mExecutors.networkIO().execute(() -> {
+            try {
+
+                String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(reviewsUrl);
+                List<MovieReview> movieReviewEntries = (List<MovieReview>) reviewJsonParser.parseJson(jsonResponse);
+                Log.d(TAG, "Reviews JSON parsing finished");
+
+                if (movieReviewEntries.size() > 0) {
+                    Log.d(TAG, "Review entries have " + movieReviewEntries.size() + " values");
+                    Log.d(TAG, "The first review is " + movieReviewEntries.get(0));
+
+                    // trigger call to observers
+                    mDownloadedReviews.postValue(movieReviewEntries);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

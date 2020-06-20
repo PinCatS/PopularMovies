@@ -20,6 +20,7 @@ public final class NetworkUtilities {
     public static final String TOP_RATED_ENDPOINT = "movie/top_rated";
     public static final String POPULAR_ENDPOINT = "movie/popular";
     public static final String MOVIE_TRAILERS_ENDPOINT = "movie/%d/videos";
+    public static final String MOVIE_REVIEWS_ENDPOINT = "movie/%d/reviews";
 
     public static URL buildURL(String endpoint) {
         Uri uri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()

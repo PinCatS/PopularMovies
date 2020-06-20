@@ -17,6 +17,8 @@ import static androidx.room.ForeignKey.CASCADE;
         childColumns = "movie_id",
         onDelete = CASCADE))
 public class MovieTrailerEntry implements Parcelable {
+    @Ignore
+    public static final String TRAILER_YOUTUBE_BASE_URL = "https://www.youtube.com/";
 
     @NonNull
     @PrimaryKey
