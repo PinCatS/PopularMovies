@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +45,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
     private RecyclerView mReviewsRecyclerView;
     private ReviewAdapter mReviewAdapter;
 
+    private MovieDetailsViewModel mModelView;
+
     @Override
     public void onTrailerClickListener(MovieTrailerEntry movieTrailer) {
         Log.d(TAG, "TrailerClickListener invoked");
@@ -60,11 +63,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFavoriteButton = findViewById(R.id.bt_favorite);
-        if (mIsFavorite) {
-            mFavoriteButton.setText("Remove\nfrom favorite");
-        } else {
-            mFavoriteButton.setText("Mark\nas favorite");
-        }
 
         // Setup recycler view for movie trailers
         mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
@@ -94,10 +92,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         }
 
         if (mMovieEntry != null) {
-            // Setup ModelView
-            MovieDetailsModelFactory modelViewFactory = InjectorUtils.provideMovieDetailsModelFactory(this);
-            MovieDetailsViewModel modelView = new ViewModelProvider(this, modelViewFactory).get(MovieDetailsViewModel.class);
-            modelView.getMovieTrailersLiveData().observe(this, newTrailerHolders -> {
+            MovieDetailsModelFactory modelViewFactory = InjectorUtils.provideMovieDetailsModelFactory(this, mMovieEntry.getId());
+            mModelView = new ViewModelProvider(this, modelViewFactory).get(MovieDetailsViewModel.class);
+
+            mModelView.isFavorite().observe(this, isFavorite -> {
+                mIsFavorite = isFavorite;
+                if (isFavorite) {
+                    Log.d(TAG, "Favorite");
+                    mFavoriteButton.setText("Remove\nfrom favorite");
+                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+                } else {
+                    Log.d(TAG, "Not Favorite");
+                    mFavoriteButton.setText("Mark\nas favorite");
+                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                }
+            });
+
+            mModelView.getMovieTrailersLiveData().observe(this, newTrailerHolders -> {
                 int movieId = mMovieEntry.getId();
                 List<MovieTrailerEntry> trailers = new ArrayList<>();
                 for (MovieTrailerHolder holder : newTrailerHolders) {
@@ -108,16 +119,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                 mTrailerAdapter.notifyDataSetChanged();
             });
 
-            modelView.getMovieReviewsLiveData().observe(this, newReviews -> {
+            mModelView.getMovieReviewsLiveData().observe(this, newReviews -> {
                 mReviewAdapter.setReviewsData(newReviews);
                 mReviewAdapter.notifyDataSetChanged();
             });
 
             // Retrieve movie trailers and reviews
-            modelView.updateTrailersData(mMovieEntry.getId());
+            mModelView.updateTrailersData(mMovieEntry.getId());
 
             //TODO: Bug - if movie doesn't have reviews, it show the reviews of last clicked film
-            modelView.updateReviewsData(mMovieEntry.getId());
+            mModelView.updateReviewsData(mMovieEntry.getId());
 
             populateUI();
         }
@@ -126,11 +137,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             @Override
             public void onClick(View view) {
                 if (mIsFavorite) {
+                    mModelView.removeFromFavorite(mMovieEntry);
                     mFavoriteButton.setText("Mark\nas favorite");
-                    mIsFavorite = false;
+                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.colorAccent));
                 } else {
+                    mModelView.saveAsFavorite(mMovieEntry);
                     mFavoriteButton.setText("Remove\nfrom favorite");
-                    mIsFavorite = true;
+                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.colorPrimary));
                 }
             }
         });

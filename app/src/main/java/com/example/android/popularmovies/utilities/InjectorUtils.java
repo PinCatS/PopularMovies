@@ -29,7 +29,7 @@ public class InjectorUtils {
         return new MainActivityModelFactory(provideRepository(context));
     }
 
-    public static MovieDetailsModelFactory provideMovieDetailsModelFactory(Context context) {
-        return new MovieDetailsModelFactory(provideRepository(context));
+    public static MovieDetailsModelFactory provideMovieDetailsModelFactory(Context context, int movieId) {
+        return new MovieDetailsModelFactory(provideRepository(context), movieId);
     }
 }

@@ -3,6 +3,7 @@ package com.example.android.popularmovies.data;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.android.popularmovies.AppExecutors;
 import com.example.android.popularmovies.data.database.MovieDao;
@@ -42,6 +43,32 @@ public class PopularMovieRepository {
             Log.d(TAG, "Created new repository");
         }
         return sInstance;
+    }
+
+    public MovieDao getMovieDao() {
+        return mMovieDao;
+    }
+
+    public void checkIfMovieInFavorite(MutableLiveData<Boolean> isFavorite, int movieId) {
+        mExecutors.diskIO().execute(() -> {
+            boolean hasMovie = mMovieDao.hasMovie(movieId);
+            isFavorite.postValue(hasMovie);
+            Log.d("MovieDetailViewModel", "Is movie in a database? --> " + hasMovie);
+        });
+    }
+
+    public void saveMovieAsFavorite(MovieEntry movie) {
+        mExecutors.diskIO().execute(() -> {
+            mMovieDao.insertMovie(movie);
+            Log.d(TAG, String.format("Insert movie %s into a database", movie.getTitle()));
+        });
+    }
+
+    public void removeFromFavorite(MovieEntry movie) {
+        mExecutors.diskIO().execute(() -> {
+            mMovieDao.deleteMovie(movie);
+            Log.d(TAG, String.format("Remove movie %s from a database", movie.getTitle()));
+        });
     }
 
     /*

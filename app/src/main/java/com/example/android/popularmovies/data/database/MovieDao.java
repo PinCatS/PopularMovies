@@ -21,6 +21,12 @@ public interface MovieDao {
     @Query("SELECT * FROM movie WHERE id = :id")
     LiveData<MovieEntry> loadMovieById(final int id);
 
+    @Query("SELECT EXISTS(SELECT * FROM movie WHERE id = :id)")
+    boolean hasMovie(int id);
+
+    @Insert
+    void insertMovie(MovieEntry movieEntry);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void bulkInsert(MovieEntry... movieEntries);
 
