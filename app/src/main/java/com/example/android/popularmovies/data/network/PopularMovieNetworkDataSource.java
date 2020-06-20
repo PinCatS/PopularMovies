@@ -74,7 +74,7 @@ public class PopularMovieNetworkDataSource {
      * Get the newest movie data from network endpoint and notifies subscribers of movie live data
      * */
     public void fetchMovies(String endpoint) {
-
+        if (endpoint == null) endpoint = NetworkUtilities.POPULAR_ENDPOINT;
         URL movieUrl = NetworkUtilities.buildURL(endpoint);
         JsonParser movieJsonParser = new MovieJsonParser();
 
