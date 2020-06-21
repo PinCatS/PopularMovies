@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="32dp">
 
-    <TextView
-        android:id="@+id/tv_review_author"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        tools:text="John Smith" />
+        android:layout_height="300dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="2dp">
 
-    <TextView
-        android:id="@+id/tv_review_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:textSize="14sp"
-        tools:text="‘Ad Astra’ is about as art house as Hollywood cinema gets; disguising a metaphysical drama as an action-packed sci-fi adventure is a clever move for James Gray. While not perfect, it’s consistently entertaining whilst offering an introspective investigation on how parents influence their children. While a journey to the outer realms of our solar system, ‘Ad Astra’ is also an exploration of the human heart. - Charlie David Page Read Charlie's full article... https://www.maketheswitch.com.au/article/review-ad-astra-a-luscious-and-meticulous-space-drama" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tv_review_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="22sp"
+                tools:text="John Smith" />
+
+            <TextView
+                android:id="@+id/tv_review_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:textSize="14sp"
+                tools:text="‘Ad Astra’ is about as art house as Hollywood cinema gets; disguising a metaphysical drama as an action-packed sci-fi adventure is a clever move for James Gray. While not perfect, it’s consistently entertaining whilst offering an introspective investigation on how parents influence their children. While a journey to the outer realms of our solar system, ‘Ad Astra’ is also an exploration of the human heart. - Charlie David Page Read Charlie's full article... https://www.maketheswitch.com.au/article/review-ad-astra-a-luscious-and-meticulous-space-drama" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

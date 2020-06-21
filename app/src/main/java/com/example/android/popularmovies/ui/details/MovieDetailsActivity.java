@@ -19,13 +19,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
+import com.example.android.popularmovies.data.database.MovieReview;
 import com.example.android.popularmovies.data.database.MovieTrailerEntry;
 import com.example.android.popularmovies.data.database.MovieTrailerHolder;
 import com.example.android.popularmovies.utilities.InjectorUtils;
 import com.squareup.picasso.Picasso;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,14 +81,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         mTrailerAdapter = new TrailerAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
 
-        // Setup recycler view for movie reviews
+/*        // Setup recycler view for movie reviews
         mReviewsRecyclerView = findViewById(R.id.rv_movie_reviews_list);
 
         RecyclerView.LayoutManager reviewsLayoutManager = new LinearLayoutManager(this);
         mReviewsRecyclerView.setLayoutManager(reviewsLayoutManager);
 
         mReviewAdapter = new ReviewAdapter();
-        mReviewsRecyclerView.setAdapter(mReviewAdapter);
+        mReviewsRecyclerView.setAdapter(mReviewAdapter);*/
 
         // Retrieve the movie info passed from the main activity
         Intent intent = getIntent();
@@ -139,9 +142,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                     divider.setVisibility(View.GONE);
                 } else {
                     divider.setVisibility(View.VISIBLE);
+                    initSlider(newReviews);
                 }
-                mReviewAdapter.setReviewsData(newReviews);
-                mReviewAdapter.notifyDataSetChanged();
+                /*mReviewAdapter.setReviewsData(newReviews);
+                mReviewAdapter.notifyDataSetChanged();*/
             });
 
             // Retrieve movie trailers and reviews
@@ -218,6 +222,30 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         Intent intent = new Intent(Intent.ACTION_VIEW, trailerUri);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        }
+    }
+
+    /*
+     * Initializes image slider
+     *
+     * Basically it sets up view pager with an adapter and sets circle indicators
+     * if there is only review, it removes indicator layout
+     * */
+    private void initSlider(List<MovieReview> reviews) {
+
+        ViewPager mPager = findViewById(R.id.pager);
+        mPager.setAdapter(new SlidingReviewsAdapter(this, reviews));
+
+        CirclePageIndicator indicator = findViewById(R.id.indicator);
+
+        if (reviews.size() == 1) {
+            indicator.setVisibility(View.GONE);
+        } else {
+            indicator.setViewPager(mPager);
+            final float density = getResources().getDisplayMetrics().density;
+
+            //Set circle indicator radius
+            indicator.setRadius(5 * density);
         }
     }
 }
