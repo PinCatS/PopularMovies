@@ -7,6 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
         android:orientation="vertical">
 
         <TextView
@@ -88,28 +89,32 @@
 
         <!--This View serves as a visual divider between list items-->
         <View
+            android:id="@+id/divider_trailers"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="#dadada" />
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/tv_trailers_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="@dimen/paddingLeft"
+            android:text="@string/trailers_label"
+            android:textSize="24sp" />
 
         <include
             android:id="@+id/details_movie_trailers"
             layout="@layout/movie_trailers_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp" />
+            android:layout_height="wrap_content" />
 
         <!--This View serves as a visual divider between list items-->
         <View
+            android:id="@+id/divider_reviews"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="#dadada" />
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark" />
 
         <include
             android:id="@+id/details_movie_reviews"

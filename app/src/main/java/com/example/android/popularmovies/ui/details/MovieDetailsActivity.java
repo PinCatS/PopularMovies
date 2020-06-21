@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,9 +68,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         // Setup recycler view for movie trailers
         mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
 
-        RecyclerView.LayoutManager trailersLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this);
         mTrailersRecyclerView.setLayoutManager(trailersLayoutManager);
         mTrailersRecyclerView.setHasFixedSize(true);
+
+        DividerItemDecoration itemDecor = new DividerItemDecoration(mTrailersRecyclerView.getContext(), trailersLayoutManager.getOrientation());
+        mTrailersRecyclerView.addItemDecoration(itemDecor);
 
         mTrailerAdapter = new TrailerAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
@@ -109,6 +113,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             });
 
             mModelView.getMovieTrailersLiveData().observe(this, newTrailerHolders -> {
+                View divider = findViewById(R.id.divider_trailers);
+                TextView textView = findViewById(R.id.tv_trailers_label);
+                if (newTrailerHolders.size() == 0) {
+                    divider.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
+                } else {
+                    divider.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.VISIBLE);
+                }
+
                 int movieId = mMovieEntry.getId();
                 List<MovieTrailerEntry> trailers = new ArrayList<>();
                 for (MovieTrailerHolder holder : newTrailerHolders) {
@@ -120,6 +134,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             });
 
             mModelView.getMovieReviewsLiveData().observe(this, newReviews -> {
+                View divider = findViewById(R.id.divider_reviews);
+                if (newReviews.size() == 0) {
+                    divider.setVisibility(View.GONE);
+                } else {
+                    divider.setVisibility(View.VISIBLE);
+                }
                 mReviewAdapter.setReviewsData(newReviews);
                 mReviewAdapter.notifyDataSetChanged();
             });
