@@ -126,8 +126,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
 
             // Retrieve movie trailers and reviews
             mModelView.updateTrailersData(mMovieEntry.getId());
-
-            //TODO: Bug - if movie doesn't have reviews, it show the reviews of last clicked film
             mModelView.updateReviewsData(mMovieEntry.getId());
 
             populateUI();

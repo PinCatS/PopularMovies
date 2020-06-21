@@ -147,10 +147,9 @@ public class PopularMovieNetworkDataSource {
                 if (movieTrailerEntries.size() > 0) {
                     Log.d(TAG, "Trailers entries have " + movieTrailerEntries.size() + " values");
                     Log.d(TAG, "The first trailer is " + movieTrailerEntries.get(0));
-
-                    // trigger call to observers
-                    mDownloadedTrailers.postValue(movieTrailerEntries);
                 }
+                // trigger call to observers
+                mDownloadedTrailers.postValue(movieTrailerEntries);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -177,10 +176,10 @@ public class PopularMovieNetworkDataSource {
                 if (movieReviewEntries.size() > 0) {
                     Log.d(TAG, "Review entries have " + movieReviewEntries.size() + " values");
                     Log.d(TAG, "The first review is " + movieReviewEntries.get(0));
-
-                    // trigger call to observers
-                    mDownloadedReviews.postValue(movieReviewEntries);
                 }
+
+                // trigger call to observers
+                mDownloadedReviews.postValue(movieReviewEntries);
             } catch (Exception e) {
                 e.printStackTrace();
             }
