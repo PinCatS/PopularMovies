@@ -17,8 +17,6 @@ public final class NetworkUtilities {
 
     private static final String THEMOVIEDB_BASE_URL = "https://api.themoviedb.org/3";
     private static final String API_KEY_QUERY = "api_key";
-    public static final String TOP_RATED_ENDPOINT = "movie/top_rated";
-    public static final String POPULAR_ENDPOINT = "movie/popular";
     public static final String MOVIE_TRAILERS_ENDPOINT = "movie/%d/videos";
     public static final String MOVIE_REVIEWS_ENDPOINT = "movie/%d/reviews";
 

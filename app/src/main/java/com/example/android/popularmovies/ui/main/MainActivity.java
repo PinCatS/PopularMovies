@@ -11,27 +11,31 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
-import com.example.android.popularmovies.data.network.NetworkUtilities;
 import com.example.android.popularmovies.ui.details.MovieDetailsActivity;
 import com.example.android.popularmovies.utilities.InjectorUtils;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickListener {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private static final String MOVIES_DATA_KEY = "movies";
-    private static final String LAST_SELECTED_ENDPOINT_KEY = "last_endpoint";
+    private static final String LAST_SELECTED_VIEW_TYPE_KEY = "last_endpoint";
 
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessage;
-    private String mLastSelectedEndpoint;
 
     private MainActivityViewModel mModelView;
+    private Observer<List<MovieEntry>> mMoviesObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,28 +63,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        // retrieve what endpoint a user used last time
-        if (savedInstanceState != null && savedInstanceState.containsKey(LAST_SELECTED_ENDPOINT_KEY)) {
-            mLastSelectedEndpoint = savedInstanceState.getString(LAST_SELECTED_ENDPOINT_KEY);
-        }
-
-        // Setup ModelView
-        MainActivityModelFactory modelViewFactory = InjectorUtils.provideMainActivityModelFactory(this);
-        mModelView = new ViewModelProvider(this, modelViewFactory).get(MainActivityViewModel.class);
-        mModelView.getMoviesLiveData().observe(this, newMovieEntries -> {
+        mMoviesObserver = newMovieEntries -> {
             //TODO: Implement DiffUtils way
             mMovieAdapter.setMoviesData(newMovieEntries);
             mMovieAdapter.notifyDataSetChanged();
 
             if (newMovieEntries != null) showMovieData();
             else showLoading();
-        });
-    }
+        };
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString(LAST_SELECTED_ENDPOINT_KEY, mLastSelectedEndpoint);
-        super.onSaveInstanceState(outState);
+        // Setup ModelView
+        MainActivityModelFactory modelViewFactory = InjectorUtils.provideMainActivityModelFactory(this);
+        mModelView = new ViewModelProvider(this, modelViewFactory).get(MainActivityViewModel.class);
+        mModelView.getMoviesLiveData(mModelView.getViewType()).observe(this, mMoviesObserver);
     }
 
     private void showLoading() {
@@ -95,9 +90,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     }
 
     private void showMovieData() {
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,15 +108,33 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         int menuItemId = item.getItemId();
         switch (menuItemId) {
             case R.id.refresh_item:
-                mModelView.updateMovieData(mLastSelectedEndpoint);
+                mModelView.updateMovieData();
                 return true;
             case R.id.most_popular_item:
-                mModelView.updateMovieData(NetworkUtilities.POPULAR_ENDPOINT);
+                if (mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
+                    mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
+                    mModelView.setViewType(MainActivityViewModel.POPULAR_VIEW);
+                    mModelView.getMoviesLiveData(MainActivityViewModel.POPULAR_VIEW).observe(this, mMoviesObserver);
+                }
+                mModelView.setViewType(MainActivityViewModel.POPULAR_VIEW);
+                mModelView.updateMovieData();
                 return true;
             case R.id.top_rated_item:
-                mModelView.updateMovieData(NetworkUtilities.TOP_RATED_ENDPOINT);
-                mLastSelectedEndpoint = NetworkUtilities.TOP_RATED_ENDPOINT;
+                if (mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
+                    mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
+                    mModelView.setViewType(MainActivityViewModel.TOP_RATED_VIEW);
+                    mModelView.getMoviesLiveData(MainActivityViewModel.TOP_RATED_VIEW).observe(this, mMoviesObserver);
+                }
+                mModelView.setViewType(MainActivityViewModel.TOP_RATED_VIEW);
+                mModelView.updateMovieData();
                 return true;
+            case R.id.favorites_item:
+                if (!mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
+                    mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
+                    mModelView.setViewType(MainActivityViewModel.FAVORITES_VIEW);
+                    mModelView.getMoviesLiveData(MainActivityViewModel.FAVORITES_VIEW).observe(this, mMoviesObserver);
+                }
+                mModelView.updateMovieData();
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -10,4 +10,5 @@
     </string>
     <string name="share_menu_item">share</string>
     <string name="movie_poster_content_description">Movie poster</string>
+    <string name="favorites_menu_title">Favorites</string>
 </resources>

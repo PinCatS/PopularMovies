@@ -43,11 +43,13 @@ public class MovieDetailsViewModel extends ViewModel {
     public void saveAsFavorite(MovieEntry movie) {
         mRepository.saveMovieAsFavorite(movie);
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movie.getId());
+        mRepository.retrieveMoviesFrom(PopularMovieRepository.FAVORITES_ENDPOINT);
     }
 
     public void removeFromFavorite(MovieEntry movie) {
         mRepository.removeFromFavorite(movie);
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movie.getId());
+        mRepository.retrieveMoviesFrom(PopularMovieRepository.FAVORITES_ENDPOINT);
     }
 
     public LiveData<Boolean> isFavorite() {

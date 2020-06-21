@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.android.popularmovies.AppExecutors;
+import com.example.android.popularmovies.data.PopularMovieRepository;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.database.MovieReview;
 import com.example.android.popularmovies.data.database.MovieTrailerHolder;
@@ -49,6 +50,18 @@ public class PopularMovieNetworkDataSource {
         return sInstance;
     }
 
+    public MutableLiveData<List<MovieEntry>> getMoviesMutableLiveData() {
+        return mDownloadedMovies;
+    }
+
+    public MutableLiveData<List<MovieTrailerHolder>> getTrailersMutableLiveData() {
+        return mDownloadedTrailers;
+    }
+
+    public MutableLiveData<List<MovieReview>> getReviewsMutableLiveData() {
+        return mDownloadedReviews;
+    }
+
     public LiveData<List<MovieEntry>> getMoviesLiveData(String endpoint) {
         initializeData(endpoint);
         return mDownloadedMovies;
@@ -89,7 +102,7 @@ public class PopularMovieNetworkDataSource {
      * */
     public void fetchMovies(String endpoint) {
         // TODO: retrieve the default one
-        if (endpoint == null) endpoint = NetworkUtilities.POPULAR_ENDPOINT;
+        if (endpoint == null) endpoint = PopularMovieRepository.POPULAR_ENDPOINT;
         URL movieUrl = NetworkUtilities.buildURL(endpoint);
         JsonParser movieJsonParser = new MovieJsonParser();
 

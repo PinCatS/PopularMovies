@@ -14,7 +14,14 @@ import com.example.android.popularmovies.data.network.PopularMovieNetworkDataSou
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class PopularMovieRepository {
+    public static final String TOP_RATED_ENDPOINT = "movie/top_rated";
+    public static final String POPULAR_ENDPOINT = "movie/popular";
+    public static final String FAVORITES_ENDPOINT = "favorites";
+
+
     private static final String TAG = PopularMovieRepository.class.getSimpleName();
 
     private static final Object LOCK = new Object();
@@ -90,8 +97,10 @@ public class PopularMovieRepository {
     /*
      * Invokes retrieval of movies from endpoint
      * */
-    public void retrieveMoviesFrom(String endpoint) {
-        mMovieNetworkDataSource.retrieveMoviesFrom(endpoint);
+    public void retrieveMoviesFrom(@Nullable String endpoint) {
+        if (endpoint == null || !endpoint.equals(FAVORITES_ENDPOINT)) {
+            mMovieNetworkDataSource.retrieveMoviesFrom(endpoint);
+        }
     }
 
     public void retrieveTrailersByMovieId(int id) {
