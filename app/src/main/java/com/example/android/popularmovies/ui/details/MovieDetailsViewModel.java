@@ -22,7 +22,7 @@ public class MovieDetailsViewModel extends ViewModel {
         mMovieTrailers = mRepository.getTrailersLiveData();
         mMovieReviews = mRepository.getReviewsLiveData();
 
-        // Do initial checks and requests
+        // Do initial checks and retrieval of movies and trailers
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movieId);
         updateTrailersData(movieId);
         updateReviewsData(movieId);
@@ -36,6 +36,7 @@ public class MovieDetailsViewModel extends ViewModel {
         return mMovieReviews;
     }
 
+
     private void updateTrailersData(int id) {
         mRepository.retrieveTrailersByMovieId(id);
     }
@@ -44,16 +45,17 @@ public class MovieDetailsViewModel extends ViewModel {
         mRepository.retrieveReviewsByMovieId(id);
     }
 
+    /*
+     * Request to save movie as a favorite
+     * */
     public void saveAsFavorite(MovieEntry movie) {
         mRepository.saveMovieAsFavorite(movie);
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movie.getId());
-        mRepository.retrieveMoviesFrom(PopularMovieRepository.FAVORITES_ENDPOINT);
     }
 
     public void removeFromFavorite(MovieEntry movie) {
         mRepository.removeFromFavorite(movie);
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movie.getId());
-        mRepository.retrieveMoviesFrom(PopularMovieRepository.FAVORITES_ENDPOINT);
     }
 
     public LiveData<Boolean> isFavorite() {
