@@ -12,4 +12,6 @@
     <string name="movie_poster_content_description">Movie poster</string>
     <string name="favorites_menu_title">Favorites</string>
     <string name="trailers_label">Trailers:</string>
+    <string name="mark_as_favorite_string">Marked as favorite</string>
+    <string name="remove_from_favorite_string">Removed from favorite</string>
 </resources>

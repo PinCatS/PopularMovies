@@ -8,18 +8,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
@@ -27,11 +26,13 @@ import com.example.android.popularmovies.data.database.MovieReview;
 import com.example.android.popularmovies.data.database.MovieTrailerEntry;
 import com.example.android.popularmovies.data.database.MovieTrailerHolder;
 import com.example.android.popularmovies.utilities.InjectorUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
-import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.relex.circleindicator.CircleIndicator3;
 
 public class MovieDetailsActivity extends AppCompatActivity implements TrailerAdapter.OnTrailerClickListener {
     private static final String TAG = MovieDetailsActivity.class.getSimpleName();
@@ -40,16 +41,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
 
     private MovieEntry mMovieEntry;
 
-    private Button mFavoriteButton;
+    private FloatingActionButton mFavoriteFab;
     private boolean mIsFavorite;
 
     private RecyclerView mTrailersRecyclerView;
     private TrailerAdapter mTrailerAdapter;
 
-    private RecyclerView mReviewsRecyclerView;
-    private ReviewAdapter mReviewAdapter;
-
     private MovieDetailsViewModel mModelView;
+    private Toast mFavoriteToast;
 
     @Override
     public void onTrailerClickListener(MovieTrailerEntry movieTrailer) {
@@ -66,7 +65,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mFavoriteButton = findViewById(R.id.bt_favorite);
+        mFavoriteFab = findViewById(R.id.bt_favorite);
 
         // Setup recycler view for movie trailers
         mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
@@ -80,15 +79,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
 
         mTrailerAdapter = new TrailerAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
-
-/*        // Setup recycler view for movie reviews
-        mReviewsRecyclerView = findViewById(R.id.rv_movie_reviews_list);
-
-        RecyclerView.LayoutManager reviewsLayoutManager = new LinearLayoutManager(this);
-        mReviewsRecyclerView.setLayoutManager(reviewsLayoutManager);
-
-        mReviewAdapter = new ReviewAdapter();
-        mReviewsRecyclerView.setAdapter(mReviewAdapter);*/
 
         // Retrieve the movie info passed from the main activity
         Intent intent = getIntent();
@@ -106,12 +96,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                 mIsFavorite = isFavorite;
                 if (isFavorite) {
                     Log.d(TAG, "Favorite");
-                    mFavoriteButton.setText("Remove\nfrom favorite");
-                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+                    mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_favorite));
                 } else {
                     Log.d(TAG, "Not Favorite");
-                    mFavoriteButton.setText("Mark\nas favorite");
-                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                    mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_make_favorite));
                 }
             });
 
@@ -155,20 +143,28 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             populateUI();
         }
 
-        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+        mFavoriteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mIsFavorite) {
                     mModelView.removeFromFavorite(mMovieEntry);
-                    mFavoriteButton.setText("Mark\nas favorite");
-                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.colorAccent));
+                    mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_make_favorite));
+                    showToastMessage(R.string.remove_from_favorite_string);
                 } else {
                     mModelView.saveAsFavorite(mMovieEntry);
-                    mFavoriteButton.setText("Remove\nfrom favorite");
-                    mFavoriteButton.setBackgroundColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.colorPrimary));
+                    mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_favorite));
+                    showToastMessage(R.string.mark_as_favorite_string);
                 }
             }
         });
+    }
+
+    private void showToastMessage(int p) {
+        if (mFavoriteToast != null) {
+            mFavoriteToast.cancel();
+        }
+        mFavoriteToast = Toast.makeText(MovieDetailsActivity.this, p, Toast.LENGTH_SHORT);
+        mFavoriteToast.show();
     }
 
     private Intent createShareMovieIntent() {
@@ -233,10 +229,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
      * */
     private void initSlider(List<MovieReview> reviews) {
 
-        ViewPager mPager = findViewById(R.id.pager);
-        mPager.setAdapter(new SlidingReviewsAdapter(this, reviews));
+        ViewPager2 mPager = findViewById(R.id.pager_reviews);
+        mPager.setAdapter(new SlidingReviewsAdapter(reviews));
 
-        CirclePageIndicator indicator = findViewById(R.id.indicator);
+        CircleIndicator3 indicator = findViewById(R.id.indicator);
 
         if (reviews.size() == 1) {
             indicator.setVisibility(View.GONE);
@@ -245,7 +241,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             final float density = getResources().getDisplayMetrics().density;
 
             //Set circle indicator radius
-            indicator.setRadius(5 * density);
+            //indicator.setRadius(5 * density);
         }
     }
 }

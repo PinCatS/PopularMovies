@@ -68,11 +68,15 @@
                     android:textSize="18sp"
                     tools:text="8.1/10" />
 
-                <Button
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/bt_favorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Mark as\nfavorite" />
+                    android:layout_margin="8dp"
+                    android:backgroundTint="@color/colorAccent"
+                    app:borderWidth="0dp"
+                    app:srcCompat="@drawable/ic_make_favorite"
+                    app:tint="@null" />
 
             </LinearLayout>
         </LinearLayout>
@@ -117,22 +121,21 @@
             android:layout_height="1dp"
             android:background="@color/colorPrimaryDark" />
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager_reviews"
             android:layout_width="match_parent"
-            android:layout_height="380dp" />
+            android:layout_height="wrap_content" />
 
-        <com.viewpagerindicator.CirclePageIndicator
+        <me.relex.circleindicator.CircleIndicator3
             android:id="@+id/indicator"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
+            android:layout_height="48dp"
             android:paddingBottom="16dp"
-            app:centered="true"
-            app:fillColor="@color/colorAccent"
-            app:pageColor="#44000000"
-            app:snap="false"
-            app:strokeColor="#000000" />
+            app:ci_drawable_unselected="@drawable/black_radius"
+            app:ci_gravity="center"
+            app:ci_height="10dp"
+            app:ci_orientation="horizontal"
+            app:ci_width="10dp" />
 
     </LinearLayout>
 </ScrollView>
