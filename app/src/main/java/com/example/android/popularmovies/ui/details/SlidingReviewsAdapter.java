@@ -1,6 +1,12 @@
 package com.example.android.popularmovies.ui.details;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +25,14 @@ import java.util.List;
  * */
 public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAdapter.ReviewViewHolder> {
 
+    private static final String ELLIPSIS = " ...Read more";
+    private static final int REVIEW_TRIM_LENGTH = 300;
     private List<MovieReview> mReviewList;
+    private OnReadMoreClickListener mReadMoreListener;
 
-    SlidingReviewsAdapter(List<MovieReview> reviews) {
+    SlidingReviewsAdapter(List<MovieReview> reviews, OnReadMoreClickListener listener) {
         mReviewList = reviews;
+        mReadMoreListener = listener;
     }
 
     @NonNull
@@ -39,8 +49,45 @@ public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAd
         // TODO: Do we really need that check ?
         if (mReviewList != null && mReviewList.size() > 0) {
             holder.authorName.setText(mReviewList.get(position).getName());
-            holder.content.setText(mReviewList.get(position).getContent());
+
+            String originalText = mReviewList.get(position).getContent();
+
+            SpannableString trimmedSpannableString = getTrimmedSpannableString(originalText, REVIEW_TRIM_LENGTH);
+            if (trimmedSpannableString == null) {
+                holder.content.setText(originalText);
+            } else {
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View textView) {
+                        mReadMoreListener.onReadMoreClick(mReviewList.get(position));
+                    }
+
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        super.updateDrawState(ds);
+                        ds.setUnderlineText(false);
+                    }
+                };
+
+                trimmedSpannableString.setSpan(clickableSpan, REVIEW_TRIM_LENGTH + 1, REVIEW_TRIM_LENGTH + ELLIPSIS.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.content.setText(trimmedSpannableString);
+                holder.content.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.content.setHighlightColor(Color.TRANSPARENT);
+            }
         }
+    }
+
+    private SpannableString getTrimmedSpannableString(String originalText, int trimLength) {
+        if (originalText.length() > trimLength) {
+            String trimmedText = originalText.substring(0, trimLength + 1);
+            return new SpannableString(trimmedText + ELLIPSIS);
+        } else {
+            return null;
+        }
+    }
+
+    interface OnReadMoreClickListener {
+        void onReadMoreClick(MovieReview review);
     }
 
     @Override

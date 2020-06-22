@@ -12,6 +12,7 @@ public class ReviewJsonParser extends JsonParser {
     private static final String KEY_REVIEW_ID = "id";
     private static final String KEY_REVIEW_CONTENT = "content";
     private static final String KEY_REVIEW_AUTHOR = "author";
+    private static final String KEY_REVIEW_URL = "url";
 
     @Override
     public ArrayList<MovieReview> parseJson(String jsonString) throws JSONException {
@@ -28,8 +29,9 @@ public class ReviewJsonParser extends JsonParser {
             String id = reviewJsonItem.getString(KEY_REVIEW_ID);
             String authorName = reviewJsonItem.getString(KEY_REVIEW_AUTHOR);
             String content = reviewJsonItem.getString(KEY_REVIEW_CONTENT);
+            String url = reviewJsonItem.getString(KEY_REVIEW_URL);
 
-            reviewsList.add(new MovieReview(id, authorName, content));
+            reviewsList.add(new MovieReview(id, authorName, content, url));
         }
 
         return reviewsList;
