@@ -21,7 +21,7 @@ import com.example.android.popularmovies.data.database.MovieReview;
 import java.util.List;
 
 /*
- * View pager adapter for sliding reviews in the MovieDetailsActivity
+ * Adapter for sliding reviews in the MovieDetailsActivity
  * */
 public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAdapter.ReviewViewHolder> {
 
@@ -46,36 +46,35 @@ public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAd
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        // TODO: Do we really need that check ?
-        if (mReviewList != null && mReviewList.size() > 0) {
-            holder.authorName.setText(holder.authorName.getContext()
-                    .getString(R.string.review_by_string, mReviewList.get(position).getName()));
 
-            String originalText = mReviewList.get(position).getContent();
+        holder.authorName.setText(holder.authorName.getContext()
+                .getString(R.string.review_by_string, mReviewList.get(position).getName()));
 
-            SpannableString trimmedSpannableString = getTrimmedSpannableString(originalText, REVIEW_TRIM_LENGTH);
-            if (trimmedSpannableString == null) {
-                holder.content.setText(originalText);
-            } else {
-                ClickableSpan clickableSpan = new ClickableSpan() {
-                    @Override
-                    public void onClick(View textView) {
-                        mReadMoreListener.onReadMoreClick(mReviewList.get(position));
-                    }
+        String originalText = mReviewList.get(position).getContent();
 
-                    @Override
-                    public void updateDrawState(TextPaint ds) {
-                        super.updateDrawState(ds);
-                        ds.setUnderlineText(false);
-                    }
-                };
+        SpannableString trimmedSpannableString = getTrimmedSpannableString(originalText, REVIEW_TRIM_LENGTH);
+        if (trimmedSpannableString == null) {
+            holder.content.setText(originalText);
+        } else {
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    mReadMoreListener.onReadMoreClick(mReviewList.get(position));
+                }
 
-                trimmedSpannableString.setSpan(clickableSpan, REVIEW_TRIM_LENGTH + 1, REVIEW_TRIM_LENGTH + ELLIPSIS.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                holder.content.setText(trimmedSpannableString);
-                holder.content.setMovementMethod(LinkMovementMethod.getInstance());
-                holder.content.setHighlightColor(Color.TRANSPARENT);
-            }
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+            };
+
+            trimmedSpannableString.setSpan(clickableSpan, REVIEW_TRIM_LENGTH + 1, REVIEW_TRIM_LENGTH + ELLIPSIS.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.content.setText(trimmedSpannableString);
+            holder.content.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.content.setHighlightColor(Color.TRANSPARENT);
         }
+
     }
 
     private SpannableString getTrimmedSpannableString(String originalText, int trimLength) {

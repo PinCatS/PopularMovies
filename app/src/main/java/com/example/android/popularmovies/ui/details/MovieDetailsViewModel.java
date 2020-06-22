@@ -47,12 +47,17 @@ public class MovieDetailsViewModel extends ViewModel {
 
     /*
      * Request to save movie as a favorite
+     * We need to check if movie is in favorites now to trigger updates
      * */
     public void saveAsFavorite(MovieEntry movie) {
         mRepository.saveMovieAsFavorite(movie);
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movie.getId());
     }
 
+    /*
+     * Request to remove a movie from favorite
+     * We need to check if movie is not in favorites anymore to trigger updates
+     * */
     public void removeFromFavorite(MovieEntry movie) {
         mRepository.removeFromFavorite(movie);
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movie.getId());
