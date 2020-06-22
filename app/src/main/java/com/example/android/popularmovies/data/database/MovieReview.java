@@ -4,12 +4,14 @@ public class MovieReview {
     private final String id;
     private final String name;
     private final String content;
+    private final String url;
     private int movieId;
 
-    public MovieReview(String id, String name, String content) {
+    public MovieReview(String id, String name, String content, String url) {
         this.id = id;
         this.name = name;
         this.content = content;
+        this.url = url;
     }
 
     public String getId() {
@@ -22,6 +24,10 @@ public class MovieReview {
 
     public String getContent() {
         return content;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public int getMovieId() {
@@ -38,6 +44,7 @@ public class MovieReview {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", content='" + content + '\'' +
+                ", url='" + url + '\'' +
                 ", movieId=" + movieId +
                 '}';
     }

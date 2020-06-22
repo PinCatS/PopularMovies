@@ -230,7 +230,21 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
     private void initSlider(List<MovieReview> reviews) {
 
         ViewPager2 mPager = findViewById(R.id.pager_reviews);
-        mPager.setAdapter(new SlidingReviewsAdapter(reviews));
+
+
+        SlidingReviewsAdapter.OnReadMoreClickListener readMoreClickListener = new SlidingReviewsAdapter.OnReadMoreClickListener() {
+            @Override
+            public void onReadMoreClick(MovieReview review) {
+                Uri reviewUri = Uri.parse(review.getUrl());
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, reviewUri);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        };
+
+        mPager.setAdapter(new SlidingReviewsAdapter(reviews, readMoreClickListener));
 
         CircleIndicator3 indicator = findViewById(R.id.indicator);
 
@@ -239,9 +253,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         } else {
             indicator.setViewPager(mPager);
             final float density = getResources().getDisplayMetrics().density;
-
-            //Set circle indicator radius
-            //indicator.setRadius(5 * density);
         }
     }
 }
