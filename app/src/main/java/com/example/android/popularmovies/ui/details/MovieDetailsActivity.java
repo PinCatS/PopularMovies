@@ -103,15 +103,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             });
 
             mModelView.getMovieTrailersLiveData().observe(this, newTrailerHolders -> {
-                /*View divider = findViewById(R.id.divider_trailers);*/
-                /*TextView textView = findViewById(R.id.tv_trailers_label);*/
-                if (newTrailerHolders.size() == 0) {
-                    /*divider.setVisibility(View.GONE);*/
-                    /*textView.setVisibility(View.GONE);*/
-                } else {
-                    /*divider.setVisibility(View.VISIBLE);*/
-                    /*textView.setVisibility(View.VISIBLE);*/
-                }
 
                 int movieId = mMovieEntry.getId();
                 List<MovieTrailerEntry> trailers = new ArrayList<>();
@@ -124,15 +115,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             });
 
             mModelView.getMovieReviewsLiveData().observe(this, newReviews -> {
-                /*View divider = findViewById(R.id.divider_reviews);*/
-                if (newReviews.size() == 0) {
-                    /*divider.setVisibility(View.GONE);*/
-                } else {
-                    /*divider.setVisibility(View.VISIBLE);*/
+                if (newReviews.size() > 0) {
                     initSlider(newReviews);
                 }
-                /*mReviewAdapter.setReviewsData(newReviews);
-                mReviewAdapter.notifyDataSetChanged();*/
             });
 
             // Retrieve movie trailers and reviews
@@ -251,7 +236,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             indicator.setVisibility(View.GONE);
         } else {
             indicator.setViewPager(mPager);
-            final float density = getResources().getDisplayMetrics().density;
         }
     }
 }

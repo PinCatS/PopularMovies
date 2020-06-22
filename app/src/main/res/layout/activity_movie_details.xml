@@ -33,12 +33,14 @@
 
         <include
             android:id="@+id/details_movie_trailers"
-            layout="@layout/movie_trailers_list" />
+            layout="@layout/movie_trailers_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager_reviews"
             android:layout_width="match_parent"
-            android:layout_height="320dp" />
+            android:layout_height="@dimen/review_pager_height" />
 
         <me.relex.circleindicator.CircleIndicator3
             android:id="@+id/indicator"

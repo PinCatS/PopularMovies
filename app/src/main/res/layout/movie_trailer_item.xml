@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_baseline_play_arrow_24"
-        android:paddingStart="24dp"
-        android:paddingTop="16dp"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="16dp"
         android:paddingEnd="@dimen/paddingRight"
         android:paddingBottom="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
         tools:text="Movie trailer name" />
 
 </LinearLayout>

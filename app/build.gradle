@@ -38,6 +38,7 @@ android {
     defaultConfig {
         buildConfigField("String", "THEMOVIEDB_API_KEY", apikeyProperties['THEMOVIEDB_API_KEY'])
     }
+
 }
 
 repositories {
