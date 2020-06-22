@@ -9,7 +9,7 @@ import com.example.android.popularmovies.AppExecutors;
 import com.example.android.popularmovies.data.database.MovieDao;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.database.MovieReview;
-import com.example.android.popularmovies.data.database.MovieTrailerHolder;
+import com.example.android.popularmovies.data.database.MovieTrailer;
 import com.example.android.popularmovies.data.network.PopularMovieNetworkDataSource;
 
 import java.util.List;
@@ -86,7 +86,7 @@ public class PopularMovieRepository {
         return mMovieNetworkDataSource.getMoviesLiveData(endpoint);
     }
 
-    public LiveData<List<MovieTrailerHolder>> getTrailersLiveData() {
+    public LiveData<List<MovieTrailer>> getTrailersLiveData() {
         return mMovieNetworkDataSource.getTrailersLiveData();
     }
 

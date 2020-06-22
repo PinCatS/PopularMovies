@@ -1,6 +1,6 @@
 package com.example.android.popularmovies.utilities;
 
-import com.example.android.popularmovies.data.database.MovieTrailerHolder;
+import com.example.android.popularmovies.data.database.MovieTrailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,11 +14,11 @@ public class TrailerJsonParser extends JsonParser {
     private static final String KEY_VIDEO_TYPE = "type";
 
     @Override
-    public ArrayList<MovieTrailerHolder> parseJson(String jsonString) throws JSONException {
+    public ArrayList<MovieTrailer> parseJson(String jsonString) throws JSONException {
 
         if (jsonString == null) throw new JSONException("Input JSON string is null");
 
-        ArrayList<MovieTrailerHolder> trailersList = new ArrayList<>();
+        ArrayList<MovieTrailer> trailersList = new ArrayList<>();
         JSONObject trailerJson = new JSONObject(jsonString);
 
         JSONArray resultsJsonArray = trailerJson.getJSONArray(KEY_RESULTS);
@@ -28,7 +28,7 @@ public class TrailerJsonParser extends JsonParser {
                 String key = trailerJsonItem.getString(KEY_TRAILER_KEY);
                 String name = trailerJsonItem.getString(KEY_TRAILER_NAME);
 
-                trailersList.add(new MovieTrailerHolder(key, name));
+                trailersList.add(new MovieTrailer(key, name));
             }
         }
 

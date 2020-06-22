@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.data.database.MovieTrailerEntry;
+import com.example.android.popularmovies.data.database.MovieTrailer;
 
 import java.util.List;
 
@@ -19,13 +19,13 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     private static final String TAG = TrailerAdapter.class.getSimpleName();
 
     private final OnTrailerClickListener mTrailerClickListener;
-    private List<MovieTrailerEntry> mTrailersData;
+    private List<MovieTrailer> mTrailersData;
 
     TrailerAdapter(OnTrailerClickListener listener) {
         this.mTrailerClickListener = listener;
     }
 
-    List<MovieTrailerEntry> getTrailerData() {
+    List<MovieTrailer> getTrailerData() {
         return mTrailersData;
     }
 
@@ -51,12 +51,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         return mTrailersData == null ? 0 : mTrailersData.size();
     }
 
-    public void setTrailersData(List<MovieTrailerEntry> trailers) {
+    public void setTrailersData(List<MovieTrailer> trailers) {
         mTrailersData = trailers;
     }
 
     public interface OnTrailerClickListener {
-        void onTrailerClickListener(MovieTrailerEntry movieTrailer);
+        void onTrailerClickListener(MovieTrailer movieTrailer);
     }
 
     class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -71,7 +71,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         @Override
         public void onClick(View v) {
             Log.d(TAG, "MovieTrailer has been clicked");
-            MovieTrailerEntry movieTrailer = mTrailersData.get(getAdapterPosition());
+            MovieTrailer movieTrailer = mTrailersData.get(getAdapterPosition());
             mTrailerClickListener.onTrailerClickListener(movieTrailer);
         }
     }

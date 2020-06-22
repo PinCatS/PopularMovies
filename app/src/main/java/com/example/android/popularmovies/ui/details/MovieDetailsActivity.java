@@ -22,36 +22,38 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.database.MovieReview;
-import com.example.android.popularmovies.data.database.MovieTrailerEntry;
-import com.example.android.popularmovies.data.database.MovieTrailerHolder;
+import com.example.android.popularmovies.data.database.MovieTrailer;
 import com.example.android.popularmovies.utilities.InjectorUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator3;
 
+/* The movie activity displays detailed information about the movie
+ *  The activity is opened by MainActivity when clicked on the movie poster
+ *  Movie is passed to the activity via parcel.
+ *
+ *  ModelView is created in onCreate method. It is the only time when there is a fetch from the network
+ *       1. Movie trailers
+ *       2. Movie reviews
+ *
+ * */
 public class MovieDetailsActivity extends AppCompatActivity implements TrailerAdapter.OnTrailerClickListener {
     private static final String TAG = MovieDetailsActivity.class.getSimpleName();
 
     public static final String EXTRA_MOVIE_PARCELABLE = "Movie";
 
     private MovieEntry mMovieEntry;
-
+    private TrailerAdapter mTrailerAdapter;
+    private MovieDetailsViewModel mModelView;
     private FloatingActionButton mFavoriteFab;
     private boolean mIsFavorite;
-
-    private RecyclerView mTrailersRecyclerView;
-    private TrailerAdapter mTrailerAdapter;
-
-    private MovieDetailsViewModel mModelView;
     private Toast mFavoriteToast;
 
     @Override
-    public void onTrailerClickListener(MovieTrailerEntry movieTrailer) {
-        Log.d(TAG, "TrailerClickListener invoked");
+    public void onTrailerClickListener(MovieTrailer movieTrailer) {
         openYotubeTrailer(movieTrailer.getKey());
     }
 
@@ -67,14 +69,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         mFavoriteFab = findViewById(R.id.bt_favorite);
 
         // Setup recycler view for movie trailers
-        mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
+        RecyclerView mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
 
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this);
         mTrailersRecyclerView.setLayoutManager(trailersLayoutManager);
         mTrailersRecyclerView.setHasFixedSize(true);
-
-        /*DividerItemDecoration itemDecor = new DividerItemDecoration(mTrailersRecyclerView.getContext(), trailersLayoutManager.getOrientation());
-        mTrailersRecyclerView.addItemDecoration(itemDecor);*/
 
         mTrailerAdapter = new TrailerAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
@@ -87,10 +86,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             }
         }
 
+
         if (mMovieEntry != null) {
+
+            // Creating a ModelView for MovieDetails activity
             MovieDetailsModelFactory modelViewFactory = InjectorUtils.provideMovieDetailsModelFactory(this, mMovieEntry.getId());
             mModelView = new ViewModelProvider(this, modelViewFactory).get(MovieDetailsViewModel.class);
 
+            /* We listen for event when user marks as or remove from favorite.
+             *  As soon as that happens, we update the UI
+             *  When model view is created initially, it requests a check if the movie is marked as
+             *  favorite */
             mModelView.isFavorite().observe(this, isFavorite -> {
                 mIsFavorite = isFavorite;
                 if (isFavorite) {
@@ -102,43 +108,34 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
                 }
             });
 
-            mModelView.getMovieTrailersLiveData().observe(this, newTrailerHolders -> {
-
-                int movieId = mMovieEntry.getId();
-                List<MovieTrailerEntry> trailers = new ArrayList<>();
-                for (MovieTrailerHolder holder : newTrailerHolders) {
-                    trailers.add(new MovieTrailerEntry(movieId, holder));
-                }
-                mMovieEntry.setTrailers(trailers);
-                mTrailerAdapter.setTrailersData(trailers);
+            /* Here we listen for new trailers
+             *  Trailers are requested from a network only during creation of Model View
+             *  Config changes doesn't do a call to network
+             * */
+            mModelView.getMovieTrailersLiveData().observe(this, newTrailers -> {
+                mMovieEntry.setTrailers(newTrailers);
+                mTrailerAdapter.setTrailersData(newTrailers);
                 mTrailerAdapter.notifyDataSetChanged();
             });
 
-            mModelView.getMovieReviewsLiveData().observe(this, newReviews -> {
-                if (newReviews.size() > 0) {
-                    initSlider(newReviews);
-                }
-            });
-
-            // Retrieve movie trailers and reviews
-            mModelView.updateTrailersData(mMovieEntry.getId());
-            mModelView.updateReviewsData(mMovieEntry.getId());
+            /* Here we listen for new reviews
+             *  Reviews are requested from a network only during creation of Model View
+             *  Config changes doesn't do a call to network
+             * */
+            mModelView.getMovieReviewsLiveData().observe(this, this::initSlider);
 
             populateUI();
         }
 
-        mFavoriteFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mIsFavorite) {
-                    mModelView.removeFromFavorite(mMovieEntry);
-                    mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_make_favorite));
-                    showToastMessage(R.string.remove_from_favorite_string);
-                } else {
-                    mModelView.saveAsFavorite(mMovieEntry);
-                    mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_favorite));
-                    showToastMessage(R.string.mark_as_favorite_string);
-                }
+        mFavoriteFab.setOnClickListener(view -> {
+            if (mIsFavorite) {
+                mModelView.removeFromFavorite(mMovieEntry);
+                mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_make_favorite));
+                showToastMessage(R.string.remove_from_favorite_string);
+            } else {
+                mModelView.saveAsFavorite(mMovieEntry);
+                mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_favorite));
+                showToastMessage(R.string.mark_as_favorite_string);
             }
         });
     }
@@ -189,53 +186,59 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         textView.setText(mMovieEntry.getOverview());
     }
 
+    /*
+     * Opens a trailer in a browser/youtube by trailer key
+     * */
     private void openYotubeTrailer(String trailerKey) {
 
-        Uri trailerUri = Uri.parse(MovieTrailerEntry.TRAILER_YOUTUBE_BASE_URL).buildUpon()
+        Uri trailerUri = Uri.parse(MovieTrailer.TRAILER_YOUTUBE_BASE_URL).buildUpon()
                 .appendEncodedPath("watch")
                 .appendQueryParameter("v", trailerKey)
                 .build();
 
-
         Log.d(TAG, "Opening youtube trailer: " + trailerUri.toString());
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, trailerUri);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
+        openLink(trailerUri);
     }
 
     /*
-     * Initializes image slider
-     *
-     * Basically it sets up view pager with an adapter and sets circle indicators
-     * if there is only review, it removes indicator layout
+     * Initializes movie reviews card slider
      * */
     private void initSlider(List<MovieReview> reviews) {
 
         ViewPager2 mPager = findViewById(R.id.pager_reviews);
+        CircleIndicator3 indicator = findViewById(R.id.indicator);
+
+        // if there is no any reviews, we remove the views for reviews
+        if (reviews.size() == 0) {
+            mPager.setVisibility(View.GONE);
+            indicator.setVisibility(View.GONE);
+        } else {
+            mPager.setVisibility(View.VISIBLE);
+            indicator.setVisibility(View.VISIBLE);
+        }
 
 
-        SlidingReviewsAdapter.OnReadMoreClickListener readMoreClickListener = new SlidingReviewsAdapter.OnReadMoreClickListener() {
-            @Override
-            public void onReadMoreClick(MovieReview review) {
-                Uri reviewUri = Uri.parse(review.getUrl());
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, reviewUri);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-            }
+        // Open full review in a browser when ...read more is clicked
+        SlidingReviewsAdapter.OnReadMoreClickListener readMoreClickListener = review -> {
+            Uri reviewUri = Uri.parse(review.getUrl());
+            openLink(reviewUri);
         };
 
+        // setup adapter and indicators
         mPager.setAdapter(new SlidingReviewsAdapter(reviews, readMoreClickListener));
-
-        CircleIndicator3 indicator = findViewById(R.id.indicator);
 
         if (reviews.size() == 1) {
             indicator.setVisibility(View.GONE);
         } else {
             indicator.setViewPager(mPager);
+        }
+    }
+
+    private void openLink(Uri linkUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, linkUri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
         }
     }
 }

@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel;
 import com.example.android.popularmovies.data.PopularMovieRepository;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.database.MovieReview;
-import com.example.android.popularmovies.data.database.MovieTrailerHolder;
+import com.example.android.popularmovies.data.database.MovieTrailer;
 
 import java.util.List;
 
 public class MovieDetailsViewModel extends ViewModel {
     PopularMovieRepository mRepository;
-    LiveData<List<MovieTrailerHolder>> mMovieTrailers;
+    LiveData<List<MovieTrailer>> mMovieTrailers;
     LiveData<List<MovieReview>> mMovieReviews;
     MutableLiveData<Boolean> isMovieInFavorite = new MutableLiveData<>();
 
@@ -21,10 +21,14 @@ public class MovieDetailsViewModel extends ViewModel {
         mRepository = repository;
         mMovieTrailers = mRepository.getTrailersLiveData();
         mMovieReviews = mRepository.getReviewsLiveData();
+
+        // Do initial checks and requests
         mRepository.checkIfMovieInFavorite(isMovieInFavorite, movieId);
+        updateTrailersData(movieId);
+        updateReviewsData(movieId);
     }
 
-    public LiveData<List<MovieTrailerHolder>> getMovieTrailersLiveData() {
+    public LiveData<List<MovieTrailer>> getMovieTrailersLiveData() {
         return mMovieTrailers;
     }
 
@@ -32,11 +36,11 @@ public class MovieDetailsViewModel extends ViewModel {
         return mMovieReviews;
     }
 
-    public void updateTrailersData(int id) {
+    private void updateTrailersData(int id) {
         mRepository.retrieveTrailersByMovieId(id);
     }
 
-    public void updateReviewsData(int id) {
+    private void updateReviewsData(int id) {
         mRepository.retrieveReviewsByMovieId(id);
     }
 

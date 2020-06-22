@@ -36,7 +36,7 @@ public class MovieEntry implements Parcelable {
     @ColumnInfo(name = "release_date")
     private String releaseDate;
     @Ignore
-    private List<MovieTrailerEntry> trailers;
+    private List<MovieTrailer> trailers;
 
     public MovieEntry(int id, String title, String posterUrl, String overview, float userRating, String releaseDate) {
         this.id = id;
@@ -48,7 +48,7 @@ public class MovieEntry implements Parcelable {
     }
 
     @Ignore
-    public MovieEntry(int id, String title, String posterUrl, String overview, float userRating, String releaseDate, List<MovieTrailerEntry> trailers) {
+    public MovieEntry(int id, String title, String posterUrl, String overview, float userRating, String releaseDate, List<MovieTrailer> trailers) {
         this(id, title, posterUrl, overview, userRating, releaseDate);
         this.trailers = trailers;
     }
@@ -63,7 +63,7 @@ public class MovieEntry implements Parcelable {
         releaseDate = fieldsArray[3];
         userRating = in.readFloat();
         id = in.readInt();
-        trailers = in.createTypedArrayList(MovieTrailerEntry.CREATOR);
+        trailers = in.createTypedArrayList(MovieTrailer.CREATOR);
     }
 
     public String getTitle() {
@@ -90,11 +90,11 @@ public class MovieEntry implements Parcelable {
         return posterUrl;
     }
 
-    public List<MovieTrailerEntry> getTrailers() {
+    public List<MovieTrailer> getTrailers() {
         return trailers;
     }
 
-    public void setTrailers(List<MovieTrailerEntry> trailers) {
+    public void setTrailers(List<MovieTrailer> trailers) {
         this.trailers = trailers;
     }
 

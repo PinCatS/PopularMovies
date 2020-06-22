@@ -10,7 +10,7 @@ import com.example.android.popularmovies.AppExecutors;
 import com.example.android.popularmovies.data.PopularMovieRepository;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.database.MovieReview;
-import com.example.android.popularmovies.data.database.MovieTrailerHolder;
+import com.example.android.popularmovies.data.database.MovieTrailer;
 import com.example.android.popularmovies.utilities.JsonParser;
 import com.example.android.popularmovies.utilities.MovieJsonParser;
 import com.example.android.popularmovies.utilities.ReviewJsonParser;
@@ -27,7 +27,7 @@ public class PopularMovieNetworkDataSource {
     private static PopularMovieNetworkDataSource sInstance;
     private final AppExecutors mExecutors;
     private MutableLiveData<List<MovieEntry>> mDownloadedMovies;
-    private MutableLiveData<List<MovieTrailerHolder>> mDownloadedTrailers;
+    private MutableLiveData<List<MovieTrailer>> mDownloadedTrailers;
     private MutableLiveData<List<MovieReview>> mDownloadedReviews;
 
     private static boolean mInitialized;
@@ -54,7 +54,7 @@ public class PopularMovieNetworkDataSource {
         return mDownloadedMovies;
     }
 
-    public MutableLiveData<List<MovieTrailerHolder>> getTrailersMutableLiveData() {
+    public MutableLiveData<List<MovieTrailer>> getTrailersMutableLiveData() {
         return mDownloadedTrailers;
     }
 
@@ -67,7 +67,7 @@ public class PopularMovieNetworkDataSource {
         return mDownloadedMovies;
     }
 
-    public LiveData<List<MovieTrailerHolder>> getTrailersLiveData() {
+    public LiveData<List<MovieTrailer>> getTrailersLiveData() {
         return mDownloadedTrailers;
     }
 
@@ -141,7 +141,7 @@ public class PopularMovieNetworkDataSource {
             try {
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(trailersUrl);
-                List<MovieTrailerHolder> movieTrailerEntries = (List<MovieTrailerHolder>) trailerJsonParser.parseJson(jsonResponse);
+                List<MovieTrailer> movieTrailerEntries = (List<MovieTrailer>) trailerJsonParser.parseJson(jsonResponse);
                 Log.d(TAG, "Trailers JSON parsing finished");
 
                 if (movieTrailerEntries.size() > 0) {
