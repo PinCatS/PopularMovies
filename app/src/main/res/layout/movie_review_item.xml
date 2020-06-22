@@ -11,37 +11,45 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="@dimen/paddingLeft"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="@dimen/paddingRight"
         android:layout_marginBottom="8dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="2dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_review_author"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/paddingLeft"
                 android:layout_marginTop="16dp"
-                android:textSize="22sp"
-                tools:text="John Smith" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Review by John Smith" />
 
             <TextView
                 android:id="@+id/tv_review_content"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/paddingLeft"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/paddingRight"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_review_author"
                 tools:text="‘Ad Astra’ is about as art house as Hollywood cinema gets; disguising a metaphysical drama as an action-packed sci-fi adventure is a clever move for James Gray. While not perfect, it’s consistently entertaining whilst offering an introspective investigation on how parents influence their children. While a journey to the outer realms of our solar system, ‘Ad Astra’ is also an exploration of the human heart. - Charlie David Page Read Charlie's full article... https://www.maketheswitch.com.au/article/review-ad-astra-a-luscious-and-meticulous-space-drama" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

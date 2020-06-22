@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -74,8 +73,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         mTrailersRecyclerView.setLayoutManager(trailersLayoutManager);
         mTrailersRecyclerView.setHasFixedSize(true);
 
-        DividerItemDecoration itemDecor = new DividerItemDecoration(mTrailersRecyclerView.getContext(), trailersLayoutManager.getOrientation());
-        mTrailersRecyclerView.addItemDecoration(itemDecor);
+        /*DividerItemDecoration itemDecor = new DividerItemDecoration(mTrailersRecyclerView.getContext(), trailersLayoutManager.getOrientation());
+        mTrailersRecyclerView.addItemDecoration(itemDecor);*/
 
         mTrailerAdapter = new TrailerAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
@@ -104,14 +103,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             });
 
             mModelView.getMovieTrailersLiveData().observe(this, newTrailerHolders -> {
-                View divider = findViewById(R.id.divider_trailers);
-                TextView textView = findViewById(R.id.tv_trailers_label);
+                /*View divider = findViewById(R.id.divider_trailers);*/
+                /*TextView textView = findViewById(R.id.tv_trailers_label);*/
                 if (newTrailerHolders.size() == 0) {
-                    divider.setVisibility(View.GONE);
-                    textView.setVisibility(View.GONE);
+                    /*divider.setVisibility(View.GONE);*/
+                    /*textView.setVisibility(View.GONE);*/
                 } else {
-                    divider.setVisibility(View.VISIBLE);
-                    textView.setVisibility(View.VISIBLE);
+                    /*divider.setVisibility(View.VISIBLE);*/
+                    /*textView.setVisibility(View.VISIBLE);*/
                 }
 
                 int movieId = mMovieEntry.getId();
@@ -125,11 +124,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             });
 
             mModelView.getMovieReviewsLiveData().observe(this, newReviews -> {
-                View divider = findViewById(R.id.divider_reviews);
+                /*View divider = findViewById(R.id.divider_reviews);*/
                 if (newReviews.size() == 0) {
-                    divider.setVisibility(View.GONE);
+                    /*divider.setVisibility(View.GONE);*/
                 } else {
-                    divider.setVisibility(View.VISIBLE);
+                    /*divider.setVisibility(View.VISIBLE);*/
                     initSlider(newReviews);
                 }
                 /*mReviewAdapter.setReviewsData(newReviews);

@@ -16,110 +16,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:paddingLeft="@dimen/paddingLeft"
+            android:paddingStart="@dimen/paddingLeft"
             android:paddingTop="24dp"
-            android:paddingRight="@dimen/paddingRight"
+            android:paddingEnd="@dimen/paddingRight"
             android:paddingBottom="24dp"
             android:textColor="@color/colorTextPrimaryDark"
             android:textSize="40sp"
             tools:text="Chappie" />
 
-        <LinearLayout
+        <include
+            android:id="@+id/include_movie_main_info"
+            layout="@layout/movie_main_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-
-            <!-- I don't like that the height is hardcoded but I haven't
-                found a simple a suitable solution at the moment -->
-            <ImageView
-                android:id="@+id/iv_poster_details"
-                android:layout_width="0dp"
-                android:layout_height="250dp"
-                android:layout_marginLeft="@dimen/paddingLeft"
-                android:layout_marginRight="@dimen/paddingRight"
-                android:layout_weight="1"
-                android:contentDescription="@string/movie_poster_content_description"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/backgrounds/scenic" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingLeft="24dp">
-
-                <TextView
-                    android:id="@+id/tv_movie_year_details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextPrimaryDark"
-                    android:textSize="22sp"
-                    tools:text="2015" />
-
-                <TextView
-                    android:id="@+id/tv_movie_rating_details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:textColor="@color/colorTextPrimaryDark"
-                    android:textSize="18sp"
-                    tools:text="8.1/10" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/bt_favorite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:backgroundTint="@color/colorAccent"
-                    app:borderWidth="0dp"
-                    app:srcCompat="@drawable/ic_make_favorite"
-                    app:tint="@null" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_movie_overview_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/paddingLeft"
-            android:paddingRight="@dimen/paddingRight"
-            android:paddingBottom="16dp"
-            android:textColor="@color/colorTextPrimaryDark"
-            android:textSize="20sp"
-            tools:text="Every child comes to this world full of promise, and none more so than Chappie." />
-
-        <!--This View serves as a visual divider between list items-->
-        <View
-            android:id="@+id/divider_trailers"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark" />
-
-        <TextView
-            android:id="@+id/tv_trailers_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingLeft="@dimen/paddingLeft"
-            android:text="@string/trailers_label"
-            android:textSize="24sp" />
+            android:layout_marginBottom="32dp" />
 
         <include
             android:id="@+id/details_movie_trailers"
-            layout="@layout/movie_trailers_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <!--This View serves as a visual divider between list items-->
-        <View
-            android:id="@+id/divider_reviews"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark" />
+            layout="@layout/movie_trailers_list" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager_reviews"

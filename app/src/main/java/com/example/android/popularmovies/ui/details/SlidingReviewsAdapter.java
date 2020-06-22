@@ -25,7 +25,7 @@ import java.util.List;
  * */
 public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAdapter.ReviewViewHolder> {
 
-    private static final String ELLIPSIS = " ...Read more";
+    private static final String ELLIPSIS = "...Read more";
     private static final int REVIEW_TRIM_LENGTH = 300;
     private List<MovieReview> mReviewList;
     private OnReadMoreClickListener mReadMoreListener;
@@ -48,7 +48,8 @@ public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAd
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         // TODO: Do we really need that check ?
         if (mReviewList != null && mReviewList.size() > 0) {
-            holder.authorName.setText(mReviewList.get(position).getName());
+            holder.authorName.setText(holder.authorName.getContext()
+                    .getString(R.string.review_by_string, mReviewList.get(position).getName()));
 
             String originalText = mReviewList.get(position).getContent();
 
