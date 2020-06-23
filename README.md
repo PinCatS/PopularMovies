@@ -1,5 +1,5 @@
 # PopularMovies
-Poject 1 at Udacity Android Basics nanodegree program where I need to create movieEntries app (stage 1).
+Poject 1 and 2 at Udacity Android Basics nanodegree program where I need to create movieEntries app.
 
 At that stage the app should retrieve movieEntries data from themoviedb.org using their api and show the movieEntries' posters in the grid.
 User could refresh the page and retrieve popular or top rated movieEntries by selecting appropriate option from the menu.
@@ -9,7 +9,7 @@ In addition sharing functionality was implemented and the app saves state in cas
 And retrieve the saved state and restore the views without pulling data from the internet.
 
 ## Pre-requisites
-* Android SDK v29 (min SDK v21)
+* Android target SDK v30 (min SDK v21)
 * Android Build Tools v29.0.3
 * Themoviedb API key
 
