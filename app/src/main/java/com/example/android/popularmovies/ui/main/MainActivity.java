@@ -87,8 +87,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
         // Subscribe to listen movies fetch failures
         mModelView.getMoviesFetchFailureLiveData().observe(this, isFailed -> {
-            Toast.makeText(MainActivity.this, "Failed to retrieve movies", Toast.LENGTH_LONG).show();
-            switchToOfflineMode();
+            if (isFailed) {
+                Toast.makeText(MainActivity.this, "Failed to retrieve movies", Toast.LENGTH_LONG).show();
+                switchToOfflineMode();
+            }
         });
     }
 
