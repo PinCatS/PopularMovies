@@ -52,6 +52,10 @@ public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAd
 
         String originalText = mReviewList.get(position).getContent();
 
+        /* Usually reviews are big, so we trim the original text and append ELLIPSIS span text
+         *  that looks like a link and on click will do anything that is specified by the client
+         *  activity. In our case it will open full review in a browser.
+         * */
         SpannableString trimmedSpannableString = getTrimmedSpannableString(originalText, REVIEW_TRIM_LENGTH);
         if (trimmedSpannableString == null) {
             holder.content.setText(originalText);
@@ -77,6 +81,9 @@ public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAd
 
     }
 
+    /* Trims the text leaving only the text of size trimLength and appends ELLIPSIS
+     *
+     * */
     private SpannableString getTrimmedSpannableString(String originalText, int trimLength) {
         if (originalText.length() > trimLength) {
             String trimmedText = originalText.substring(0, trimLength + 1);
@@ -95,7 +102,7 @@ public class SlidingReviewsAdapter extends RecyclerView.Adapter<SlidingReviewsAd
         return mReviewList == null ? 0 : mReviewList.size();
     }
 
-    class ReviewViewHolder extends RecyclerView.ViewHolder {
+    static class ReviewViewHolder extends RecyclerView.ViewHolder {
         TextView authorName;
         TextView content;
 

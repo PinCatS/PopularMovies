@@ -40,10 +40,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
-        // TODO: Do we really need that check ?
-        if (mTrailersData != null && mTrailersData.size() > 0) {
             holder.trailerName.setText(mTrailersData.get(position).getName());
-        }
     }
 
     @Override
