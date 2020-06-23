@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MovieEntry;
 import com.example.android.popularmovies.data.database.MovieReview;
 import com.example.android.popularmovies.data.database.MovieTrailer;
+import com.example.android.popularmovies.databinding.ActivityMovieDetailsBinding;
 import com.example.android.popularmovies.utilities.InjectorUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -52,6 +54,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
     private boolean mIsFavorite;
     private Toast mFavoriteToast;
 
+    ActivityMovieDetailsBinding mBinding;
+
     @Override
     public void onTrailerClickListener(MovieTrailer movieTrailer) {
         openYotubeTrailer(movieTrailer.getKey());
@@ -62,14 +66,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
+
         // Enable UP button
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mFavoriteFab = findViewById(R.id.bt_favorite);
+        mFavoriteFab = mBinding.includeMovieMainInfo.btFavorite;
 
         // Setup recycler view for movie trailers
-        RecyclerView mTrailersRecyclerView = findViewById(R.id.rv_movie_trailers_list);
+        RecyclerView mTrailersRecyclerView = mBinding.detailsMovieTrailers.rvMovieTrailersList;
 
         LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this);
         mTrailersRecyclerView.setLayoutManager(trailersLayoutManager);
@@ -100,10 +106,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             mModelView.isFavorite().observe(this, isFavorite -> {
                 mIsFavorite = isFavorite;
                 if (isFavorite) {
-                    Log.d(TAG, "Favorite");
                     mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_favorite));
                 } else {
-                    Log.d(TAG, "Not Favorite");
                     mFavoriteFab.setImageDrawable(getDrawable(R.drawable.ic_make_favorite));
                 }
             });
@@ -164,13 +168,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
     }
 
     private void populateUI() {
-        ImageView imageView = findViewById(R.id.iv_poster_details);
+        ImageView imageView = mBinding.includeMovieMainInfo.ivPosterDetails;
         Picasso.get().load(mMovieEntry.getPosterUrl()).into(imageView);
 
-        TextView textView = findViewById(R.id.tv_movie_title_details);
+        TextView textView = mBinding.tvMovieTitleDetails;
         textView.setText(mMovieEntry.getTitle());
 
-        textView = findViewById(R.id.tv_movie_year_details);
+        textView = mBinding.includeMovieMainInfo.tvMovieYearDetails;
         String releaseDate = mMovieEntry.getReleaseDate();
         if (!TextUtils.isEmpty(releaseDate)) {
             textView.setText(releaseDate.split("-")[0]); // show only the year for now
@@ -178,11 +182,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
             textView.setVisibility(View.GONE);
         }
 
-        textView = findViewById(R.id.tv_movie_rating_details);
+        textView = mBinding.includeMovieMainInfo.tvMovieRatingDetails;
         float rating = mMovieEntry.getUserRating();
         textView.setText(getString(R.string.movie_rating_string, rating));
 
-        textView = findViewById(R.id.tv_movie_overview_details);
+        textView = mBinding.includeMovieMainInfo.tvMovieOverviewDetails;
         textView.setText(mMovieEntry.getOverview());
     }
 
@@ -206,8 +210,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
      * */
     private void initSlider(List<MovieReview> reviews) {
 
-        ViewPager2 mPager = findViewById(R.id.pager_reviews);
-        CircleIndicator3 indicator = findViewById(R.id.indicator);
+        ViewPager2 mPager = mBinding.pagerReviews;
+        CircleIndicator3 indicator = mBinding.indicator;
 
         // if there is no any reviews, we remove the views for reviews
         if (reviews.size() == 0) {

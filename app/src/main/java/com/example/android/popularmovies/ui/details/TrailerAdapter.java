@@ -1,7 +1,6 @@
 package com.example.android.popularmovies.ui.details;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,9 @@ import com.example.android.popularmovies.data.database.MovieTrailer;
 
 import java.util.List;
 
+/*
+ * General Recycler View adapter that is used to show list of trailers
+ * */
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
     private static final String TAG = TrailerAdapter.class.getSimpleName();
 
@@ -23,10 +25,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     TrailerAdapter(OnTrailerClickListener listener) {
         this.mTrailerClickListener = listener;
-    }
-
-    List<MovieTrailer> getTrailerData() {
-        return mTrailersData;
     }
 
     @NonNull
@@ -40,7 +38,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
-            holder.trailerName.setText(mTrailersData.get(position).getName());
+        holder.trailerName.setText(mTrailersData.get(position).getName());
     }
 
     @Override
@@ -67,7 +65,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
         @Override
         public void onClick(View v) {
-            Log.d(TAG, "MovieTrailer has been clicked");
             MovieTrailer movieTrailer = mTrailersData.get(getAdapterPosition());
             mTrailerClickListener.onTrailerClickListener(movieTrailer);
         }

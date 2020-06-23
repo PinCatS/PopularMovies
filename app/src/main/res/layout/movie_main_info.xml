@@ -1,70 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/iv_poster_details"
-        android:layout_width="@dimen/details_poster_width"
-        android:layout_height="@dimen/details_poster_height"
-        android:layout_marginStart="@dimen/paddingLeft"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/movie_poster_content_description"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_movie_year_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_poster_details"
-        app:layout_constraintTop_toTopOf="@+id/iv_poster_details"
-        tools:text="2015" />
+        <ImageView
+            android:id="@+id/iv_poster_details"
+            android:layout_width="@dimen/details_poster_width"
+            android:layout_height="@dimen/details_poster_height"
+            android:layout_marginStart="@dimen/paddingLeft"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/movie_poster_content_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic" />
 
-    <TextView
-        android:id="@+id/tv_movie_rating_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintEnd_toEndOf="@+id/tv_movie_year_details"
-        app:layout_constraintStart_toStartOf="@+id/tv_movie_year_details"
-        app:layout_constraintTop_toBottomOf="@+id/tv_movie_year_details"
-        tools:text="8.1/10" />
+        <TextView
+            android:id="@+id/tv_movie_year_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_poster_details"
+            app:layout_constraintTop_toTopOf="@+id/iv_poster_details"
+            tools:text="2015" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bt_favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/colorAccent"
-        app:borderWidth="0dp"
-        app:layout_constraintEnd_toEndOf="@+id/tv_movie_rating_details"
-        app:layout_constraintStart_toStartOf="@+id/tv_movie_rating_details"
-        app:layout_constraintTop_toBottomOf="@+id/tv_movie_rating_details"
-        app:srcCompat="@drawable/ic_make_favorite"
-        app:tint="@null" />
+        <TextView
+            android:id="@+id/tv_movie_rating_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintEnd_toEndOf="@+id/tv_movie_year_details"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_year_details"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_year_details"
+            tools:text="8.1/10" />
 
-    <TextView
-        android:id="@+id/tv_movie_overview_details"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/paddingLeft"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_poster_details"
-        tools:text="Every child comes to this world full of promise, and none more so than Chappie." />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/bt_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_movie_rating_details"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_rating_details"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_rating_details"
+            app:srcCompat="@drawable/ic_make_favorite"
+            app:tint="@null" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_movie_overview_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/paddingLeft"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster_details"
+            tools:text="Every child comes to this world full of promise, and none more so than Chappie." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

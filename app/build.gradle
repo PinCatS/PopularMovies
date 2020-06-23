@@ -39,6 +39,7 @@ android {
         buildConfigField("String", "THEMOVIEDB_API_KEY", apikeyProperties['THEMOVIEDB_API_KEY'])
     }
 
+    android.buildFeatures.dataBinding = true
 }
 
 repositories {
