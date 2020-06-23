@@ -15,4 +15,6 @@
     <string name="mark_as_favorite_string">Marked as favorite</string>
     <string name="remove_from_favorite_string">Removed from favorite</string>
     <string name="review_by_string">Review by <xliff:g example="John Smith" id="review_author">%s</xliff:g></string>
+    <string name="fetch_failure_message">Failed to retrieve movies</string>
+    <string name="offline_mode_message">Switching to favorites</string>
 </resources>
