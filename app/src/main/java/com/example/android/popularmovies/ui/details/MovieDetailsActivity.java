@@ -214,9 +214,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         CircleIndicator3 indicator = mBinding.indicator;
 
         // if there is no any reviews, we remove the views for reviews
-        if (reviews.size() == 0) {
+        if (reviews == null || reviews.size() == 0) {
             mPager.setVisibility(View.GONE);
             indicator.setVisibility(View.GONE);
+            return;
         } else {
             mPager.setVisibility(View.VISIBLE);
             indicator.setVisibility(View.VISIBLE);

@@ -108,21 +108,24 @@ public class PopularMovieNetworkDataSource {
 
         Log.d(TAG, "Start downloading new movies data from " + endpoint);
         mExecutors.networkIO().execute(() -> {
+            List<MovieEntry> movieEntries = null;
             try {
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
-                List<MovieEntry> movieEntries = (List<MovieEntry>) movieJsonParser.parseJson(jsonResponse);
+                movieEntries = (List<MovieEntry>) movieJsonParser.parseJson(jsonResponse);
                 Log.d(TAG, "Movies JSON parsing finished");
 
                 if (movieEntries.size() > 0) {
                     Log.d(TAG, "Movie entries have " + movieEntries.size() + " values");
                     Log.d(TAG, "The first movie is " + movieEntries.get(0));
-
-                    // trigger call to observers
-                    mDownloadedMovies.postValue(movieEntries);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                /* trigger call to observers in any case. If it is null, we know that there might be
+                 * a problem with retrieval and do an appropriate things in ui
+                 */
+                mDownloadedMovies.postValue(movieEntries);
             }
         });
     }
@@ -148,7 +151,8 @@ public class PopularMovieNetworkDataSource {
                     Log.d(TAG, "Trailers entries have " + movieTrailerEntries.size() + " values");
                     Log.d(TAG, "The first trailer is " + movieTrailerEntries.get(0));
                 }
-                // trigger call to observers
+
+                // it is ok if there is no trailers
                 mDownloadedTrailers.postValue(movieTrailerEntries);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -178,7 +182,7 @@ public class PopularMovieNetworkDataSource {
                     Log.d(TAG, "The first review is " + movieReviewEntries.get(0));
                 }
 
-                // trigger call to observers
+                // it is ok if there is no trailers
                 mDownloadedReviews.postValue(movieReviewEntries);
             } catch (Exception e) {
                 e.printStackTrace();
