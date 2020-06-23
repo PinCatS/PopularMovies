@@ -9,7 +9,7 @@ In addition sharing functionality was implemented and the app saves state in cas
 And retrieve the saved state and restore the views without pulling data from the internet.
 
 ## Pre-requisites
-* Android SDK v29 (min SDK v21)
+* Android target SDK v30 (min SDK v21)
 * Android Build Tools v29.0.3
 * Themoviedb API key
 
