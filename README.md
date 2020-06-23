@@ -1,12 +1,13 @@
 # PopularMovies
-Poject 1 and 2 at Udacity Android Basics nanodegree program where I need to create movieEntries app.
+Poject 1 and 2 at Udacity Android Developer nanodegree program where I need to create movieEntries app.
 
-At that stage the app should retrieve movieEntries data from themoviedb.org using their api and show the movieEntries' posters in the grid.
-User could refresh the page and retrieve popular or top rated movieEntries by selecting appropriate option from the menu.
-Clicking on the movieEntry poster, it should open the movieEntry details screen that contains movieEntry details.
+The PopularMovie app lists popular or top rated movies retrieved from themoviedb.org, lets user see the details of the movies (title, synopsis, rating, trailers and reviews) and mark them as favorites that can be listed offline.
 
-In addition sharing functionality was implemented and the app saves state in case of screen configuration changes or when user switches between apps.
-And retrieve the saved state and restore the views without pulling data from the internet.
+* Designed UI for portrait and landscape orientations. Got experience working with Constraint layout, RecyclerView, PagerView2
+* Used Android Architecture Components (LiveData, ModelView, Room and DataBinding).
+* Followed recommended android app architecture guide where UI is drived from a Model and the Model communicates with a Repository that hides data source from the Model and serves as a mediator between database and network data sources.
+* Retrieved data from network and parsed json data working with themoviedb API. Stored and retrieved data from SQLite.
+* Enjoyed much! Looking forward to learn more and do cool apps:)
 
 ## Pre-requisites
 * Android target SDK v30 (min SDK v21)
