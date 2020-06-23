@@ -103,6 +103,7 @@ public class PopularMovieNetworkDataSource {
         Log.d(TAG, "Start downloading new movies data from " + endpoint);
         mExecutors.networkIO().execute(() -> {
             List<MovieEntry> movieEntries = null;
+            boolean isFailed = false;
             try {
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(movieUrl);
@@ -113,14 +114,17 @@ public class PopularMovieNetworkDataSource {
                     Log.d(TAG, "Movie entries have " + movieEntries.size() + " values");
                     Log.d(TAG, "The first movie is " + movieEntries.get(0));
                 }
+
+                isFailed = false;
             } catch (Exception e) {
                 e.printStackTrace();
-                mFetchFailure.postValue(true); // notify that fetch failed
+                isFailed = true;
             } finally {
                 /* trigger call to observers in any case. If it is null, we know that there might be
                  * a problem with retrieval and do an appropriate things in ui
                  */
                 mDownloadedMovies.postValue(movieEntries);
+                mFetchFailure.postValue(isFailed); // notify that fetch failed
             }
         });
     }
