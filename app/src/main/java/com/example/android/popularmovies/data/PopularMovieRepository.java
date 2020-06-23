@@ -94,6 +94,10 @@ public class PopularMovieRepository {
         return mMovieNetworkDataSource.getReviewsLiveData();
     }
 
+    public LiveData<Boolean> getFetchFailureLiveData() {
+        return mMovieNetworkDataSource.getFetchFailureMutableLiveData();
+    }
+
     /*
      * Invokes retrieval of movies from endpoint
      * */

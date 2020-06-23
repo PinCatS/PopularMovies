@@ -29,6 +29,7 @@ public class PopularMovieNetworkDataSource {
     private MutableLiveData<List<MovieEntry>> mDownloadedMovies;
     private MutableLiveData<List<MovieTrailer>> mDownloadedTrailers;
     private MutableLiveData<List<MovieReview>> mDownloadedReviews;
+    private MutableLiveData<Boolean> mFetchFailure;
 
     private static boolean mInitialized;
 
@@ -37,6 +38,7 @@ public class PopularMovieNetworkDataSource {
         mDownloadedMovies = new MutableLiveData<>();
         mDownloadedTrailers = new MutableLiveData<>();
         mDownloadedReviews = new MutableLiveData<>();
+        mFetchFailure = new MutableLiveData<>();
     }
 
     public static PopularMovieNetworkDataSource getInstance(Context context, AppExecutors executors) {
@@ -50,16 +52,8 @@ public class PopularMovieNetworkDataSource {
         return sInstance;
     }
 
-    public MutableLiveData<List<MovieEntry>> getMoviesMutableLiveData() {
-        return mDownloadedMovies;
-    }
-
-    public MutableLiveData<List<MovieTrailer>> getTrailersMutableLiveData() {
-        return mDownloadedTrailers;
-    }
-
-    public MutableLiveData<List<MovieReview>> getReviewsMutableLiveData() {
-        return mDownloadedReviews;
+    public LiveData<Boolean> getFetchFailureMutableLiveData() {
+        return mFetchFailure;
     }
 
     public LiveData<List<MovieEntry>> getMoviesLiveData(String endpoint) {
@@ -121,6 +115,7 @@ public class PopularMovieNetworkDataSource {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                mFetchFailure.postValue(true); // notify that fetch failed
             } finally {
                 /* trigger call to observers in any case. If it is null, we know that there might be
                  * a problem with retrieval and do an appropriate things in ui
@@ -141,10 +136,11 @@ public class PopularMovieNetworkDataSource {
 
         Log.d(TAG, "Start downloading new trailers data from " + endpoint);
         mExecutors.networkIO().execute(() -> {
+            List<MovieTrailer> movieTrailerEntries = null;
             try {
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(trailersUrl);
-                List<MovieTrailer> movieTrailerEntries = (List<MovieTrailer>) trailerJsonParser.parseJson(jsonResponse);
+                movieTrailerEntries = (List<MovieTrailer>) trailerJsonParser.parseJson(jsonResponse);
                 Log.d(TAG, "Trailers JSON parsing finished");
 
                 if (movieTrailerEntries.size() > 0) {
@@ -152,10 +148,10 @@ public class PopularMovieNetworkDataSource {
                     Log.d(TAG, "The first trailer is " + movieTrailerEntries.get(0));
                 }
 
-                // it is ok if there is no trailers
-                mDownloadedTrailers.postValue(movieTrailerEntries);
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                mDownloadedTrailers.postValue(movieTrailerEntries);
             }
         });
     }
@@ -171,10 +167,11 @@ public class PopularMovieNetworkDataSource {
 
         Log.d(TAG, "Start downloading new reviews data from " + endpoint);
         mExecutors.networkIO().execute(() -> {
+            List<MovieReview> movieReviewEntries = null;
             try {
 
                 String jsonResponse = NetworkUtilities.getResponseFromHttpUrl(reviewsUrl);
-                List<MovieReview> movieReviewEntries = (List<MovieReview>) reviewJsonParser.parseJson(jsonResponse);
+                movieReviewEntries = (List<MovieReview>) reviewJsonParser.parseJson(jsonResponse);
                 Log.d(TAG, "Reviews JSON parsing finished");
 
                 if (movieReviewEntries.size() > 0) {
@@ -182,10 +179,10 @@ public class PopularMovieNetworkDataSource {
                     Log.d(TAG, "The first review is " + movieReviewEntries.get(0));
                 }
 
-                // it is ok if there is no trailers
-                mDownloadedReviews.postValue(movieReviewEntries);
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                mDownloadedReviews.postValue(movieReviewEntries);
             }
         });
     }

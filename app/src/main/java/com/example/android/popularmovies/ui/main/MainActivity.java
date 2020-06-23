@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
     private MainActivityViewModel mModelView;
     private Observer<List<MovieEntry>> mMoviesObserver;
+
+    private boolean mOfflineMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +73,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             mMovieAdapter.setMoviesData(newMovieEntries);
             mMovieAdapter.notifyDataSetChanged();
 
-            /*
-             * If we got null, that means that network fetch was unsuccessful
-             * Switch to offline mode where we show favorite view
-             * */
             if (newMovieEntries != null) showMovieData();
-            else showErrorMessage();
+            else showLoading();
         };
 
         /*
@@ -85,6 +84,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         MainActivityModelFactory modelViewFactory = InjectorUtils.provideMainActivityModelFactory(this);
         mModelView = new ViewModelProvider(this, modelViewFactory).get(MainActivityViewModel.class);
         mModelView.getMoviesLiveData(mModelView.getViewType()).observe(this, mMoviesObserver);
+
+        // Subscribe to listen movies fetch failures
+        mModelView.getMoviesFetchFailureLiveData().observe(this, isFailed -> {
+            Toast.makeText(MainActivity.this, "Failed to retrieve movies", Toast.LENGTH_LONG).show();
+            switchToOfflineMode();
+        });
+    }
+
+    /*
+     * Switch to offline mode (is called when there are fetch failures)
+     * */
+    private void switchToOfflineMode() {
+        // Request view only if we not in it already
+        if (!mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
+            Toast.makeText(MainActivity.this, "Switching to favorites", Toast.LENGTH_LONG).show();
+            switchToView(MainActivityViewModel.FAVORITES_VIEW);
+            mModelView.updateMovieData();
+        }
+        mOfflineMode = true;
     }
 
     private void showLoading() {
@@ -134,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             case R.id.favorites_item:
                 if (!mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
                     switchToView(MainActivityViewModel.FAVORITES_VIEW);
-                    mModelView.updateMovieData();
+                    //mModelView.updateMovieData();
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -150,6 +168,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     private void switchToView(String endpointView) {
         mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
         mModelView.setViewType(endpointView);
+        /* If we were in offline mode, means that we had issue with fetch
+         * try to fetch data again before switching to the observer,
+         * otherwise we always loop in an offline mode
+         */
+        if (mOfflineMode) {
+            mOfflineMode = false;
+            mModelView.updateMovieData();
+        }
         mModelView.getMoviesLiveData(endpointView).observe(this, mMoviesObserver);
     }
 

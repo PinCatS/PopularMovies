@@ -44,6 +44,10 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
+    public LiveData<Boolean> getMoviesFetchFailureLiveData() {
+        return mRepository.getFetchFailureLiveData();
+    }
+
     // Invokes network operation
     public void updateMovieData() {
         String endpoint;
