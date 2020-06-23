@@ -1,5 +1,5 @@
 # PopularMovies
-Poject 1 at Udacity Android Basics nanodegree program where I need to create movieEntries app (stage 1).
+Poject 1 and 2 at Udacity Android Basics nanodegree program where I need to create movieEntries app.
 
 At that stage the app should retrieve movieEntries data from themoviedb.org using their api and show the movieEntries' posters in the grid.
 User could refresh the page and retrieve popular or top rated movieEntries by selecting appropriate option from the menu.
