@@ -5,7 +5,6 @@ public class MovieReview {
     private final String name;
     private final String content;
     private final String url;
-    private int movieId;
 
     public MovieReview(String id, String name, String content, String url) {
         this.id = id;
@@ -30,14 +29,6 @@ public class MovieReview {
         return url;
     }
 
-    public int getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(int movieId) {
-        this.movieId = movieId;
-    }
-
     @Override
     public String toString() {
         return "MovieReview{" +
@@ -45,7 +36,6 @@ public class MovieReview {
                 ", name='" + name + '\'' +
                 ", content='" + content + '\'' +
                 ", url='" + url + '\'' +
-                ", movieId=" + movieId +
                 '}';
     }
 }

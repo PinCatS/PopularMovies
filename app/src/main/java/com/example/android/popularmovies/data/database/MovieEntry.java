@@ -90,10 +90,6 @@ public class MovieEntry implements Parcelable {
         return posterUrl;
     }
 
-    public List<MovieTrailer> getTrailers() {
-        return trailers;
-    }
-
     public void setTrailers(List<MovieTrailer> trailers) {
         this.trailers = trailers;
     }

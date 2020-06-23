@@ -77,7 +77,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
         // Setup recycler view for movie trailers
         RecyclerView mTrailersRecyclerView = mBinding.detailsMovieTrailers.rvMovieTrailersList;
 
-        LinearLayoutManager trailersLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager trailersLayoutManager = new LinearLayoutManager(this);
         mTrailersRecyclerView.setLayoutManager(trailersLayoutManager);
         mTrailersRecyclerView.setHasFixedSize(true);
 
