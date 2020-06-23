@@ -1,5 +1,5 @@
 # PopularMovies
-Poject 1 and 2 at Udacity Android Developer nanodegree program where I need to create movieEntries app.
+Poject 1 and 2 at Udacity Android Developer nanodegree program.
 
 The PopularMovie app lists popular or top rated movies retrieved from themoviedb.org, lets user see the details of the movies (title, synopsis, rating, trailers and reviews) and mark them as favorites that can be listed offline.
 
