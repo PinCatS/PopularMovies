@@ -106,7 +106,7 @@ public class PopularMovieNetworkDataSource {
         URL movieUrl = NetworkUtilities.buildURL(endpoint);
         JsonParser movieJsonParser = new MovieJsonParser();
 
-        Log.d(TAG, "Start downloading new trailers data from " + endpoint);
+        Log.d(TAG, "Start downloading new movies data from " + endpoint);
         mExecutors.networkIO().execute(() -> {
             try {
 

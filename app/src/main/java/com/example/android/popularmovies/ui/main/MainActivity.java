@@ -64,15 +64,24 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mRecyclerView.setAdapter(mMovieAdapter);
 
         mMoviesObserver = newMovieEntries -> {
-            //TODO: Implement DiffUtils way
+            /* Need to implement DiffUtils later to improve performance
+             * in case have time before deadline
+             * */
             mMovieAdapter.setMoviesData(newMovieEntries);
             mMovieAdapter.notifyDataSetChanged();
 
+            /*
+             * If we got null, that means that network fetch was unsuccessful
+             * Switch to offline mode where we show favorite view
+             * */
             if (newMovieEntries != null) showMovieData();
-            else showLoading();
+            else showErrorMessage();
         };
 
-        // Setup ModelView
+        /*
+         * We set up Model View here
+         * We are passing view type (popular, top rated, favorite) to listen for the right live data
+         * */
         MainActivityModelFactory modelViewFactory = InjectorUtils.provideMainActivityModelFactory(this);
         mModelView = new ViewModelProvider(this, modelViewFactory).get(MainActivityViewModel.class);
         mModelView.getMoviesLiveData(mModelView.getViewType()).observe(this, mMoviesObserver);
@@ -95,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -108,36 +116,41 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         int menuItemId = item.getItemId();
         switch (menuItemId) {
             case R.id.refresh_item:
+                // Requests to retrieve data from a data source if it is from network (not db)
                 mModelView.updateMovieData();
                 return true;
             case R.id.most_popular_item:
-                if (mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
-                    mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
-                    mModelView.setViewType(MainActivityViewModel.POPULAR_VIEW);
-                    mModelView.getMoviesLiveData(MainActivityViewModel.POPULAR_VIEW).observe(this, mMoviesObserver);
+                if (!mModelView.getViewType().equals(MainActivityViewModel.POPULAR_VIEW)) {
+                    switchToView(MainActivityViewModel.POPULAR_VIEW);
+                    mModelView.updateMovieData();
                 }
-                mModelView.setViewType(MainActivityViewModel.POPULAR_VIEW);
-                mModelView.updateMovieData();
                 return true;
             case R.id.top_rated_item:
-                if (mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
-                    mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
-                    mModelView.setViewType(MainActivityViewModel.TOP_RATED_VIEW);
-                    mModelView.getMoviesLiveData(MainActivityViewModel.TOP_RATED_VIEW).observe(this, mMoviesObserver);
+                if (!mModelView.getViewType().equals(MainActivityViewModel.TOP_RATED_VIEW)) {
+                    switchToView(MainActivityViewModel.TOP_RATED_VIEW);
+                    mModelView.updateMovieData();
                 }
-                mModelView.setViewType(MainActivityViewModel.TOP_RATED_VIEW);
-                mModelView.updateMovieData();
                 return true;
             case R.id.favorites_item:
                 if (!mModelView.getViewType().equals(MainActivityViewModel.FAVORITES_VIEW)) {
-                    mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
-                    mModelView.setViewType(MainActivityViewModel.FAVORITES_VIEW);
-                    mModelView.getMoviesLiveData(MainActivityViewModel.FAVORITES_VIEW).observe(this, mMoviesObserver);
+                    switchToView(MainActivityViewModel.FAVORITES_VIEW);
+                    mModelView.updateMovieData();
                 }
-                mModelView.updateMovieData();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /* Switch to one of the view to observe data for appropriate view
+     *  View types are:
+     *       MainActivityViewModel.POPULAR_VIEW
+     *       MainActivityViewModel.TOP_RATED_VIEW
+     *       MainActivityViewModel.FAVORITE_VIEW
+     * */
+    private void switchToView(String endpointView) {
+        mModelView.getMoviesLiveData(mModelView.getViewType()).removeObserver(mMoviesObserver);
+        mModelView.setViewType(endpointView);
+        mModelView.getMoviesLiveData(endpointView).observe(this, mMoviesObserver);
     }
 
     @Override
